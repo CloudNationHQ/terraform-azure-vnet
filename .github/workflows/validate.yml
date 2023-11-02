@@ -1,0 +1,15 @@
+name: validate
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: cloudnationhq/az-cn-shared-tf-workflows/.github/workflows/validate.yml@main
+    #test: default
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

@@ -1,0 +1,13 @@
+name: "linting"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  checks:
+    uses: cloudnationhq/az-cn-shared-tf-workflows/.github/workflows/linting.yml@main
+
