@@ -1,9 +1,9 @@
 variable "vnet" {
   description = "Contains all log analytics workspace settings"
-  type = any
+  type        = any
 }
 
 variable "naming" {
   description = "Used for naming purposes"
-  type = map(string)
+  type        = map(string)
 }

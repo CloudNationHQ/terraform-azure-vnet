@@ -1,8 +1,10 @@
+This example showcases the integration of a virtual network with azure virtual wan by establishing a vhub connection. This connection extends network capabilities by allowing seamless interconnectivity between distributed network segments.
+
 ## Usage: virtual hub connection
 
 ```hcl
 module "vhub-connection" {
-  source  = "cloudnationhq/vnet/modules/vhub-connection/azure"
+  source  = "cloudnationhq/vnet/azure//modules/vhub-connection"
   version = "~> 0.1"
 
   providers = {
