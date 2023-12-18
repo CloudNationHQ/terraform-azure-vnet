@@ -37,7 +37,7 @@ module "network" {
           name = "nsg-demo-testme-01"
           rules = [
             # { name = "myhttps", priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "443", source_address_prefix = "10.151.1.0/24", destination_address_prefix = "*" },
-            { name = "mysql", priority = 200, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "3306", source_address_prefix = "10.0.0.0/24", destination_address_prefix = azurerm_network_interface.int.private_ip_address }
+            { name = "mysql", priority = 200, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "3306", source_address_prefix = "10.0.0.0/24", destination_address_prefix = azurerm_public_ip.appgw.ip_address }
           ]
         }
       }
@@ -45,21 +45,21 @@ module "network" {
   }
 }
 
-# resource "azurerm_public_ip" "appgw" {
-#   name                = "appgw-demo-testme-01"
-#   resource_group_name = module.rg.groups.demo.name
-#   location            = module.rg.groups.demo.location
-#   allocation_method   = "Static"
-#   sku                 = "Standard"
-# }
-
-resource "azurerm_network_interface" "int" {
-  name                = "int-demo-testme-01"
-  location            = module.rg.groups.demo.location
+resource "azurerm_public_ip" "appgw" {
+  name                = "appgw-demo-testme-01"
   resource_group_name = module.rg.groups.demo.name
-
-  ip_configuration {
-    name                          = "ip-demo-testme-01"
-    private_ip_address_allocation = "Dynamic"
-  }
+  location            = module.rg.groups.demo.location
+  allocation_method   = "Static"
+  sku                 = "Standard"
 }
+
+# resource "azurerm_network_interface" "int" {
+#   name                = "int-demo-testme-01"
+#   location            = module.rg.groups.demo.location
+#   resource_group_name = module.rg.groups.demo.name
+
+#   ip_configuration {
+#     name                          = "ip-demo-testme-01"
+#     private_ip_address_allocation = "Dynamic"
+#   }
+# }
