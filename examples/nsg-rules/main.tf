@@ -18,8 +18,7 @@ module "rg" {
 }
 
 module "network" {
-  source  = "cloudnationhq/vnet/azure"
-  version = "~> 0.1"
+  source = "../../"
 
   naming = local.naming
 
@@ -38,10 +37,18 @@ module "network" {
           name = "nsg-demo-testme-01"
           rules = [
             { name = "myhttps", priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "443", source_address_prefix = "10.151.1.0/24", destination_address_prefix = "*" },
-            { name = "mysql", priority = 200, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "3306", source_address_prefix = "10.0.0.0/24", destination_address_prefix = "*" }
+            { name = "mysql", priority = 200, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "3306", source_address_prefix = "10.0.0.0/24", destination_address_prefix = azurerm_public_ip.appgw.ip_address }
           ]
         }
       }
     }
   }
+}
+
+resource "azurerm_public_ip" "appgw" {
+  name                = module.naming.public_ip.name
+  resource_group_name = module.rg.groups.demo.name
+  location            = module.rg.groups.demo.location
+  allocation_method   = "Static"
+
 }
