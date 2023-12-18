@@ -1,6 +1,6 @@
 locals {
-  subnets = flatten([
-    for subnet_key, subnet in var.vnet.subnets : {
+  subnets = length(lookup(var.vnet, "subnets", {})) > 0 ? flatten([
+    for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : {
       subnet_key                 = subnet_key
       virtual_network_name       = azurerm_virtual_network.vnet.name
       address_prefixes           = subnet.cidr
@@ -17,6 +17,5 @@ locals {
       route_table                = try(subnet.route, null)
       shd_route_table            = try(subnet.route_table, null)
     }
-  ])
+  ]) : []
 }
-
