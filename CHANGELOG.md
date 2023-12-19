@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.0.0...v1.1.0) (2023-12-19)
+
+
+### Features
+
+* update documentation ([#13](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/13)) ([931dc57](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/931dc57b1d860a0e877342fb9fd2190ffea861b4))
+
 ## [1.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v0.3.0...v1.0.0) (2023-12-19)
 
 
