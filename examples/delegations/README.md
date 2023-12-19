@@ -1,4 +1,4 @@
-This example shows the use of delegations on subnets. Delegations permit specific azure services to operate within a subnet, essentially granting them tailored permissions. This helps in scenarios where certain services need specialized access to function correctly.
+This example shows the use of delegations on subnets.
 
 ## Usage
 

@@ -1,4 +1,4 @@
-This example highlights the utilization of service endpoints on subnets. They enhance the security by restricting access to a subnet, effectively providing targeted connectivity. This becomes invaluable in scenarios where certain resources should be accessed solely from specific subnets.
+This example highlights the utilization of service endpoints on subnets.
 
 ## Usage
 
