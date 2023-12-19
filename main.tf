@@ -135,13 +135,16 @@ resource "azurerm_route_table" "shd_rt" {
   }
 }
 
-# route table associations
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for rt in local.subnets : rt.subnet_key => rt
-    if rt.route_table != null || rt.shd_route_table != null
+    if rt.shd_route_table != null || (rt.route_table != {} && contains(keys(azurerm_route_table.rt), rt.subnet_key))
   }
 
-  subnet_id      = azurerm_subnet.subnets[each.key].id
-  route_table_id = each.value.route_table != null ? azurerm_route_table.rt[each.key].id : azurerm_route_table.shd_rt[each.value.shd_route_table].id
+  subnet_id = azurerm_subnet.subnets[each.key].id
+
+  route_table_id = each.value.shd_route_table != null ? (contains(keys(azurerm_route_table.shd_rt), each.value.shd_route_table)
+    ? azurerm_route_table.shd_rt[each.value.shd_route_table].id : null) : (contains(keys(azurerm_route_table.rt), each.key)
+    ? azurerm_route_table.rt[each.key].id
+  : null)
 }
