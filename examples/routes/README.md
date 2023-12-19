@@ -1,4 +1,4 @@
-This example underscores the implementation of routes within subnets. Routes direct traffic flow, ensuring optimized and secure network navigation. This is crucial in scenarios where specific traffic patterns or destinations need to be enforced for a subnet's resources.
+This example underscores the implementation of routes within subnets.
 
 ## Usage
 
@@ -35,7 +35,7 @@ In situations where several subnets should share the same route table, the follo
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 0.1"
+  version = "~> 1.0"
 
   naming = local.naming
 

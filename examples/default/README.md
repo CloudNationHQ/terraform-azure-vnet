@@ -25,7 +25,7 @@ Additionally, for certain scenarios, the example below highlights the ability to
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 0.1"
+  version = "~> 1.0"
 
   for_each = local.vnets
 
