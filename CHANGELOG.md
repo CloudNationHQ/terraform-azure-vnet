@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v0.2.0...v0.3.0) (2023-12-19)
+
+
+### Features
+
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#5](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/5)) ([2c7eb23](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/2c7eb23b5b5be58809e99c21aeb41adf584d5a4d))
+* **deps:** bump golang.org/x/crypto from 0.14.0 to 0.17.0 in /tests ([#10](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/10)) ([fc83598](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/fc83598a9d1e2a95bada295f0bb762f08458fcad))
+* **deps:** Bumps terratest from 0.46.7 to 0.46.8 ([#8](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/8)) ([69f2f11](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/69f2f11654fd12de6e98b8fbb66cd79ce36fe37f))
+
 ## [0.2.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v0.1.0...v0.2.0) (2023-11-03)
 
 
