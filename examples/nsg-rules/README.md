@@ -5,7 +5,7 @@ This example highlights using network security groups in a subnet.
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 1.0"
+  version = "~> 1.1"
 
   naming = local.naming
 
