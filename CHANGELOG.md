@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v0.3.0...v1.0.0) (2023-12-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* This changes the data structure of nsg rules from a list to a map.
+
+### Bug Fixes
+
+* refactor nsg rules, resolves [#9](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/9) ([#11](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/11)) ([1cf016e](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/1cf016e6636d3043ba03c033114003b27126c6af))
+
 ## [0.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v0.2.0...v0.3.0) (2023-12-19)
 
 

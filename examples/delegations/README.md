@@ -5,7 +5,7 @@ This example shows the use of delegations on subnets. Delegations permit specifi
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 0.3"
+  version = "~> 1.0"
 
   naming = local.naming
 
