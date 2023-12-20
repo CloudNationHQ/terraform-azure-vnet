@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.1.0...v1.1.1) (2023-12-20)
+
+
+### Bug Fixes
+
+* make subnet delegation actions fully optional ([#15](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/15)) ([d25d1c6](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/d25d1c698b32385556f9b7105b2e52366de1c68a))
+
 ## [1.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.0.0...v1.1.0) (2023-12-19)
 
 
