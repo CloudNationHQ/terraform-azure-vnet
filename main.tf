@@ -148,4 +148,3 @@ resource "azurerm_subnet_route_table_association" "rt_as" {
     ? azurerm_route_table.rt[each.key].id
   : null)
 }
-
