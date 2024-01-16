@@ -1,3 +1,4 @@
+data "azurerm_subscription" "current" {}
 
 # virtual network
 resource "azurerm_virtual_network" "vnet" {
