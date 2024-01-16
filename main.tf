@@ -17,12 +17,6 @@ resource "azurerm_virtual_network" "vnet" {
   }
 }
 
-# dns
-resource "azurerm_virtual_network_dns_servers" "dns" {
-  dns_servers        = try(var.vnet.dns_servers, [])
-  virtual_network_id = azurerm_virtual_network.vnet.id
-}
-
 # subnets
 resource "azurerm_subnet" "subnets" {
   for_each = {
@@ -106,6 +100,25 @@ resource "azurerm_route_table" "rt" {
 
   dynamic "route" {
     for_each = each.value.route_table.routes
+
+    content {
+      name                   = route.key
+      address_prefix         = lookup(route.value, "address_prefix", null)
+      next_hop_type          = lookup(route.value, "next_hop_type", null)
+      next_hop_in_ip_address = lookup(route.value, "next_hop_in_ip_address", null)
+    }
+  }
+}
+
+resource "azurerm_route_table" "shd_rt" {
+  for_each = try(var.vnet.route_tables, {})
+
+  name                = try(each.value.name, "${var.naming.route_table}-${each.key}")
+  resource_group_name = var.vnet.resourcegroup
+  location            = var.vnet.location
+
+  dynamic "route" {
+    for_each = each.value.routes
 
     content {
       name                   = route.key
