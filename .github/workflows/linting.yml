@@ -9,5 +9,4 @@ on:
 
 jobs:
   checks:
-    uses: cloudnationhq/az-cn-shared-tf-workflows/.github/workflows/linting.yml@main
-
+    uses: cloudnationhq/terraform-azure-workflows/.github/workflows/linting.yml@main
