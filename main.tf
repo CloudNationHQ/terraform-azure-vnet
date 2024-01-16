@@ -116,25 +116,6 @@ resource "azurerm_route_table" "rt" {
   }
 }
 
-#resource "azurerm_route_table" "shd_rt" {
-  #for_each = try(var.vnet.route_tables, {})
-
-  #name                = try(each.value.name, "${var.naming.route_table}-${each.key}")
-  #resource_group_name = var.vnet.resourcegroup
-  #location            = var.vnet.location
-
-  #dynamic "route" {
-    #for_each = each.value.routes
-
-    #content {
-      #name                   = route.key
-      #address_prefix         = lookup(route.value, "address_prefix", null)
-      #next_hop_type          = lookup(route.value, "next_hop_type", null)
-      #next_hop_in_ip_address = lookup(route.value, "next_hop_in_ip_address", null)
-    #}
-  #}
-#}
-
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for rt in local.subnets : rt.subnet_key => rt
