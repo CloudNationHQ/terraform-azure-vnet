@@ -1,4 +1,3 @@
-data "azurerm_subscription" "current" {}
 
 # virtual network
 resource "azurerm_virtual_network" "vnet" {
@@ -15,6 +14,12 @@ resource "azurerm_virtual_network" "vnet" {
       enforcement = try(var.vnet.encryption_mode, "AllowUnencrypted")
     }
   }
+}
+
+# dns
+resource "azurerm_virtual_network_dns_servers" "dns" {
+  dns_servers        = try(var.vnet.dns_servers, [])
+  virtual_network_id = azurerm_virtual_network.vnet.id
 }
 
 # subnets
