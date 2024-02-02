@@ -91,6 +91,16 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
 
   subnet_id                 = azurerm_subnet.subnets[each.key].id
   network_security_group_id = azurerm_network_security_group.nsg[each.key].id
+
+  depends_on = [time_sleep.wait_for_subnet]
+}
+
+# subnet creation is not consistent in some regions, so we need to wait for it to be ready
+# https://github.com/CloudNationHQ/terraform-azure-vnet/issues/24
+resource "time_sleep" "wait_for_subnet" {
+  depends_on = [azurerm_subnet.subnets]
+
+  create_duration = "1m"
 }
 
 # route tables
