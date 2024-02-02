@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.1.1...v1.2.0) (2024-02-02)
+
+
+### Features
+
+* added a small delay in cases the subnets are not fully initialized in some azure regions before attaching network security groups ([#28](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/28)) ([8eafea5](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/8eafea5a8540ccc7a8b45ff78c35d9a35a20a9fc))
+* **deps:** bump github.com/Azure/azure-sdk-for-go/sdk/azidentity ([#22](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/22)) ([e4b9220](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/e4b92206b241a10523b0d58cccd1b8bebc52e09d))
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#18](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/18)) ([e63f9a6](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/e63f9a6b83df1ec77d14ec725b79f7fc0165a9a5))
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#23](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/23)) ([ed4f936](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/ed4f9360f37fb30d199671f94d9455893215359d))
+* small refactor workflows ([#19](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/19)) ([ad7e879](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/ad7e879dff55f9c4c208cbd703fdd93ab7b326de))
+
 ## [1.1.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.1.0...v1.1.1) (2023-12-20)
 
 
