@@ -6,4 +6,5 @@ variable "vnet" {
 variable "naming" {
   description = "Used for naming purposes"
   type        = map(string)
+  default     = null
 }
