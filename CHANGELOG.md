@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.2.0...v1.3.0) (2024-02-14)
+
+
+### Features
+
+* naming variable is optional now ([#32](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/32)) ([5793043](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/57930433fc901d89bb14325ab06e58ad9b15f844))
+
 ## [1.2.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.1.1...v1.2.0) (2024-02-02)
 
 
