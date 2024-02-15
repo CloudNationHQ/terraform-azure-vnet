@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.3.0...v2.0.0) (2024-02-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* network security groups can be optional now and small refactor data structure ([#34](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/34))
+
+### Features
+
+* network security groups can be optional now and small refactor data structure ([#34](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/34)) ([2d563de](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/2d563de72cce76b519bd4626d5ac8d1f1e3a8861))
+
 ## [1.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v1.2.0...v1.3.0) (2024-02-14)
 
 
