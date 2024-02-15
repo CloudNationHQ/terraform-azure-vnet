@@ -32,6 +32,7 @@ module "network" {
     subnets = {
       sn1 = {
         cidr = ["10.18.1.0/24"]
+        nsg  = {}
         endpoints = [
           "Microsoft.Storage",
           "Microsoft.Sql"
@@ -39,9 +40,15 @@ module "network" {
       }
       sn2 = {
         cidr = ["10.18.2.0/24"]
+        nsg  = {}
         delegations = {
           databricks = {
             name = "Microsoft.Databricks/workspaces"
+            actions = [
+              "Microsoft.Network/virtualNetworks/subnets/join/action",
+              "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action",
+              "Microsoft.Network/virtualNetworks/subnets/unprepareNetworkPolicies/action",
+            ]
           }
         }
       }
@@ -56,30 +63,32 @@ module "network" {
       }
       sn4 = {
         cidr = ["10.18.4.0/24"]
-        rules = [
-          {
-            name                       = "myhttps"
-            priority                   = 100
-            direction                  = "Inbound"
-            access                     = "Allow"
-            protocol                   = "Tcp"
-            source_port_range          = "*"
-            destination_port_range     = "443"
-            source_address_prefix      = "10.151.1.0/24"
-            destination_address_prefix = "*"
-          },
-          {
-            name                       = "mysql"
-            priority                   = 200
-            direction                  = "Inbound"
-            access                     = "Allow"
-            protocol                   = "Tcp"
-            source_port_range          = "*"
-            destination_port_range     = "3306"
-            source_address_prefix      = "10.0.0.0/24"
-            destination_address_prefix = "*"
+        nsg = {
+          rules = {
+            myhttps = {
+              name                       = "myhttps"
+              priority                   = 100
+              direction                  = "Inbound"
+              access                     = "Allow"
+              protocol                   = "Tcp"
+              source_port_range          = "*"
+              destination_port_range     = "443"
+              source_address_prefix      = "10.151.1.0/24"
+              destination_address_prefix = "*"
+            }
+            mysql = {
+              name                       = "mysql"
+              priority                   = 200
+              direction                  = "Inbound"
+              access                     = "Allow"
+              protocol                   = "Tcp"
+              source_port_range          = "*"
+              destination_port_ranges    = ["3306", "3307"]
+              source_address_prefixes    = ["10.0.0.0/24", "11.0.0.0/24"]
+              destination_address_prefix = "*"
+            }
           }
-        ]
+        }
       }
     }
   }

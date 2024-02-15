@@ -32,6 +32,7 @@ module "network" {
     subnets = {
       demo = {
         cidr = ["10.18.3.0/24"]
+        nsg  = {}
         endpoints = [
           "Microsoft.Storage",
           "Microsoft.Sql"

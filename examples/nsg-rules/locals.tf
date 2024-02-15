@@ -27,8 +27,8 @@ locals {
       access                     = "Allow"
       protocol                   = "Tcp"
       source_port_range          = "*"
-      destination_port_range     = "3306"
-      source_address_prefix      = "10.0.0.0/24"
+      destination_port_ranges    = ["3306", "3307"]
+      source_address_prefixes    = ["10.0.0.0/24", "11.0.0.0/24"]
       destination_address_prefix = "*"
     }
   }
