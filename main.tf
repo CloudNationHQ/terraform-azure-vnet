@@ -2,10 +2,14 @@ data "azurerm_subscription" "current" {}
 
 # virtual network
 resource "azurerm_virtual_network" "vnet" {
-  name                = var.vnet.name
-  resource_group_name = var.vnet.resourcegroup
-  location            = var.vnet.location
-  address_space       = var.vnet.cidr
+  name                    = var.vnet.name
+  resource_group_name     = var.vnet.resourcegroup
+  location                = var.vnet.location
+  address_space           = var.vnet.cidr
+  tags                    = try(var.vnet.tags, {})
+  edge_zone               = try(var.vnet.edge_zone, null)
+  bgp_community           = try(var.vnet.bgp_community, null)
+  flow_timeout_in_minutes = try(var.vnet.flow_timeout_in_minutes, null)
 
   # not available yet in all regions
   dynamic "encryption" {
@@ -14,6 +18,9 @@ resource "azurerm_virtual_network" "vnet" {
     content {
       enforcement = try(var.vnet.encryption_mode, "AllowUnencrypted")
     }
+  }
+  lifecycle {
+    ignore_changes = [subnet]
   }
 }
 
@@ -36,6 +43,7 @@ resource "azurerm_subnet" "subnets" {
   service_endpoints                             = each.value.endpoints
   private_link_service_network_policies_enabled = each.value.enforce_priv_link_service
   private_endpoint_network_policies_enabled     = each.value.enforce_priv_link_endpoint
+  service_endpoint_policy_ids                   = each.value.service_endpoint_policy_ids
 
   dynamic "delegation" {
     for_each = each.value.delegations
@@ -53,13 +61,12 @@ resource "azurerm_subnet" "subnets" {
 
 # nsg's
 resource "azurerm_network_security_group" "nsg" {
-  for_each = {
-    for subnet in local.subnets : subnet.subnet_key => subnet
-  }
+  for_each = local.nsg
 
   name                = each.value.nsg_name
   resource_group_name = var.vnet.resourcegroup
   location            = each.value.location
+  tags                = each.value.tags
 
   dynamic "security_rule" {
     for_each = each.value.rules
@@ -83,14 +90,16 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
-# nsg associations
 resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
-    for assoc in local.subnets : assoc.subnet_key => assoc
+    for subnet_key, details in local.nsg : subnet_key => {
+      subnet_id = azurerm_subnet.subnets[subnet_key].id
+      nsg_id    = azurerm_network_security_group.nsg[subnet_key].id
+    }
   }
 
-  subnet_id                 = azurerm_subnet.subnets[each.key].id
-  network_security_group_id = azurerm_network_security_group.nsg[each.key].id
+  subnet_id                 = each.value.subnet_id
+  network_security_group_id = each.value.nsg_id
 
   depends_on = [time_sleep.wait_for_subnet]
 }
@@ -105,17 +114,15 @@ resource "time_sleep" "wait_for_subnet" {
 
 # route tables
 resource "azurerm_route_table" "rt" {
-  for_each = {
-    for rt in local.subnets : rt.subnet_key => rt
-    if try(length(rt.route_table), 0) > 0
-  }
+  for_each = local.route
 
   name                = each.value.rt_name
   resource_group_name = var.vnet.resourcegroup
   location            = each.value.location
+  tags                = each.value.tags
 
   dynamic "route" {
-    for_each = each.value.route_table.routes
+    for_each = each.value.routes
 
     content {
       name                   = route.key
@@ -132,6 +139,7 @@ resource "azurerm_route_table" "shd_rt" {
   name                = try(each.value.name, "${var.naming.route_table}-${each.key}")
   resource_group_name = var.vnet.resourcegroup
   location            = var.vnet.location
+  tags                = try(each.value.tags, {})
 
   dynamic "route" {
     for_each = each.value.routes
@@ -147,14 +155,11 @@ resource "azurerm_route_table" "shd_rt" {
 
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
-    for rt in local.subnets : rt.subnet_key => rt
-    if rt.shd_route_table != null || (rt.route_table != {} && contains(keys(azurerm_route_table.rt), rt.subnet_key))
+    for subnet_key, rt_info in local.route : subnet_key => rt_info
+    if rt_info.shd_route_table != null || contains(keys(azurerm_route_table.rt), subnet_key)
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
 
-  route_table_id = each.value.shd_route_table != null ? (contains(keys(azurerm_route_table.shd_rt), each.value.shd_route_table)
-    ? azurerm_route_table.shd_rt[each.value.shd_route_table].id : null) : (contains(keys(azurerm_route_table.rt), each.key)
-    ? azurerm_route_table.rt[each.key].id
-  : null)
+  route_table_id = each.value.shd_route_table != null ? azurerm_route_table.shd_rt[each.value.shd_route_table].id : azurerm_route_table.rt[each.key].id
 }

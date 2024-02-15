@@ -31,6 +31,7 @@ module "network" {
 
     subnets = {
       sn1 = {
+        nsg  = {}
         cidr = ["10.19.1.0/24"]
       }
     }

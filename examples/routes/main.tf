@@ -12,7 +12,7 @@ module "rg" {
   groups = {
     demo = {
       name   = module.naming.resource_group.name
-      region = "westeurope"
+      region = "northeurope"
     }
   }
 }
@@ -33,13 +33,16 @@ module "network" {
       sn1 = {
         cidr        = ["10.18.1.0/24"]
         route_table = "shd"
+        nsg         = {}
       },
       sn2 = {
         cidr        = ["10.18.2.0/24"]
         route_table = "shd"
+        nsg         = {}
       },
       sn3 = {
         cidr = ["10.18.3.0/24"]
+        nsg  = {}
         route = {
           routes = {
             rt3 = {
