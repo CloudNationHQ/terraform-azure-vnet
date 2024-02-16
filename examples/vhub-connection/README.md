@@ -5,7 +5,7 @@ This example showcases the integration of a virtual network with azure virtual w
 ```hcl
 module "vhub-connection" {
   source  = "cloudnationhq/vnet/azure//modules/vhub-connection"
-  version = "~> 2.0"
+  version = "~> 2.1"
 
   providers = {
     azurerm = azurerm.connectivity
