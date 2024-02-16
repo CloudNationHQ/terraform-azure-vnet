@@ -35,16 +35,17 @@ locals {
 locals {
   subnets = length(lookup(var.vnet, "subnets", {})) > 0 ? flatten([
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : {
-      subnet_key                  = subnet_key
-      virtual_network_name        = azurerm_virtual_network.vnet.name
-      address_prefixes            = subnet.cidr
-      endpoints                   = try(subnet.endpoints, [])
-      enforce_priv_link_service   = try(subnet.enforce_priv_link_service, false)
-      enforce_priv_link_endpoint  = try(subnet.enforce_priv_link_endpoint, false)
-      service_endpoint_policy_ids = try(subnet.service_endpoint_policy_ids, null)
-      subnet_name                 = try(subnet.name, join("-", [var.naming.subnet, subnet_key]))
-      location                    = var.vnet.location
-      tags                        = try(subnet.nsg.tags, {})
+      subnet_key                                    = subnet_key
+      virtual_network_name                          = azurerm_virtual_network.vnet.name
+      address_prefixes                              = subnet.cidr
+      endpoints                                     = try(subnet.endpoints, [])
+      private_link_service_network_policies_enabled = try(subnet.private_link_service_network_policies_enabled, false)
+      private_endpoint_network_policies_enabled     = try(subnet.private_endpoint_network_policies_enabled, false)
+      service_endpoint_policy_ids                   = try(subnet.service_endpoint_policy_ids, null)
+      subnet_name                                   = try(subnet.name, join("-", [var.naming.subnet, subnet_key]))
+      location                                      = var.vnet.location
+      tags                                          = try(subnet.nsg.tags, {})
+
       delegations = [for d in try(subnet.delegations, {}) : {
         name    = d.name
         actions = try(d.actions, [])
