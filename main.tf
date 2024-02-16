@@ -20,7 +20,7 @@ resource "azurerm_virtual_network" "vnet" {
     }
   }
   lifecycle {
-    ignore_changes = [subnet]
+    ignore_changes = [subnet, dns_servers]
   }
 }
 
@@ -41,8 +41,8 @@ resource "azurerm_subnet" "subnets" {
   virtual_network_name                          = each.value.virtual_network_name
   address_prefixes                              = each.value.address_prefixes
   service_endpoints                             = each.value.endpoints
-  private_link_service_network_policies_enabled = each.value.enforce_priv_link_service
-  private_endpoint_network_policies_enabled     = each.value.enforce_priv_link_endpoint
+  private_link_service_network_policies_enabled = each.value.private_link_service_network_policies_enabled
+  private_endpoint_network_policies_enabled     = each.value.private_endpoint_network_policies_enabled
   service_endpoint_policy_ids                   = each.value.service_endpoint_policy_ids
 
   dynamic "delegation" {
