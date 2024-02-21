@@ -21,12 +21,13 @@ locals {
 locals {
   route = {
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => {
-      rt_name         = try(subnet.route.name, join("-", [var.naming.route_table, subnet_key]))
-      routes          = try(subnet.route.routes, {})
-      tags            = try(subnet.route.tags, {})
-      location        = var.vnet.location
-      route_table     = try(lookup(subnet, "route", {}), {})
-      shd_route_table = try(subnet.route_table, null)
+      rt_name                       = try(subnet.route.name, join("-", [var.naming.route_table, subnet_key]))
+      routes                        = try(subnet.route.routes, {})
+      tags                          = try(subnet.route.tags, {})
+      location                      = var.vnet.location
+      route_table                   = try(lookup(subnet, "route", {}), {})
+      shd_route_table               = try(subnet.route_table, null)
+      disable_bgp_route_propagation = try(subnet.route.disable_bgp_route_propagation, false)
     }
     if lookup(subnet, "route", null) != null || lookup(subnet, "route_table", null) != null
   }
