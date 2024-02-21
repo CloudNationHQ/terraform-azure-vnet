@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.1.0...v2.2.0) (2024-02-21)
+
+
+### Features
+
+* add support to disable bgp route propagation ([#39](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/39)) ([6b349f7](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/6b349f70ff25189d96f215eba577ea8d009ab135))
+
 ## [2.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.0.0...v2.1.0) (2024-02-16)
 
 
