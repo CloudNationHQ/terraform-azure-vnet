@@ -116,10 +116,11 @@ resource "time_sleep" "wait_for_subnet" {
 resource "azurerm_route_table" "rt" {
   for_each = local.route
 
-  name                = each.value.rt_name
-  resource_group_name = var.vnet.resourcegroup
-  location            = each.value.location
-  tags                = each.value.tags
+  name                          = each.value.rt_name
+  resource_group_name           = var.vnet.resourcegroup
+  location                      = each.value.location
+  disable_bgp_route_propagation = each.value.disable_bgp_route_propagation
+  tags                          = each.value.tags
 
   dynamic "route" {
     for_each = each.value.routes
@@ -136,10 +137,11 @@ resource "azurerm_route_table" "rt" {
 resource "azurerm_route_table" "shd_rt" {
   for_each = try(var.vnet.route_tables, {})
 
-  name                = try(each.value.name, "${var.naming.route_table}-${each.key}")
-  resource_group_name = var.vnet.resourcegroup
-  location            = var.vnet.location
-  tags                = try(each.value.tags, {})
+  name                          = try(each.value.name, "${var.naming.route_table}-${each.key}")
+  resource_group_name           = var.vnet.resourcegroup
+  location                      = var.vnet.location
+  disable_bgp_route_propagation = try(each.value.disable_bgp_route_propagation, false)
+  tags                          = try(each.value.tags, {})
 
   dynamic "route" {
     for_each = each.value.routes
