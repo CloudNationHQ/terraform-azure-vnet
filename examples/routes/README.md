@@ -5,7 +5,7 @@ This example underscores the implementation of routes within subnets.
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.1"
+  version = "~> 2.2"
 
   naming = local.naming
 
