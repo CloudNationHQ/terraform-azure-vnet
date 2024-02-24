@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.2.0...v2.2.1) (2024-02-24)
+
+
+### Bug Fixes
+
+* fix refined subnet routing to ensure correct creation and association ([#44](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/44)) ([43762f7](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/43762f76344d00976c8f180d50ddf9efa27ca0b3))
+
 ## [2.2.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.1.0...v2.2.0) (2024-02-21)
 
 
