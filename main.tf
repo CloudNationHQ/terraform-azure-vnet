@@ -114,7 +114,9 @@ resource "time_sleep" "wait_for_subnet" {
 
 # route tables
 resource "azurerm_route_table" "rt" {
-  for_each = local.route
+  for_each = {
+    for k, v in local.route : k => v if v.route_table == null || length(v.routes) > 0
+  }
 
   name                          = each.value.rt_name
   resource_group_name           = var.vnet.resourcegroup
@@ -156,12 +158,13 @@ resource "azurerm_route_table" "shd_rt" {
 }
 
 resource "azurerm_subnet_route_table_association" "rt_as" {
-  for_each = {
-    for subnet_key, rt_info in local.route : subnet_key => rt_info
-    if rt_info.shd_route_table != null || contains(keys(azurerm_route_table.rt), subnet_key)
-  }
+  for_each = local.route
 
   subnet_id = azurerm_subnet.subnets[each.key].id
 
-  route_table_id = each.value.shd_route_table != null ? azurerm_route_table.shd_rt[each.value.shd_route_table].id : azurerm_route_table.rt[each.key].id
+  route_table_id = each.value.shd_route_table != null ? (
+    contains(keys(var.vnet.route_tables), each.value.shd_route_table) ?
+    azurerm_route_table.shd_rt[each.value.shd_route_table].id :
+    azurerm_route_table.rt[each.key].id
+  ) : azurerm_route_table.rt[each.key].id
 }
