@@ -11,8 +11,8 @@ locals {
 
       nsg_name = try(subnet.nsg.name, join("-", [var.naming.network_security_group, subnet_key]))
       rules    = local.nsg_rules[subnet_key]
-      tags     = try(subnet.nsg.tags, {})
-      location = var.vnet.location
+      tags     = try(subnet.nsg.tags, var.tags, null)
+      location = coalesce(lookup(var.vnet, "location", null), var.location)
     }
     if lookup(subnet, "nsg", null) != null
   }
@@ -23,8 +23,8 @@ locals {
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => {
       rt_name                       = try(subnet.route.name, join("-", [var.naming.route_table, subnet_key]))
       routes                        = try(subnet.route.routes, {})
-      tags                          = try(subnet.route.tags, {})
-      location                      = var.vnet.location
+      tags                          = try(subnet.route.tags, var.tags, null)
+      location                      = coalesce(lookup(var.vnet, "location", null), var.location)
       route_table                   = try(lookup(subnet, "route", {}), {})
       shd_route_table               = try(subnet.route_table, null)
       disable_bgp_route_propagation = try(subnet.route.disable_bgp_route_propagation, false)
@@ -44,8 +44,8 @@ locals {
       private_endpoint_network_policies_enabled     = try(subnet.private_endpoint_network_policies_enabled, false)
       service_endpoint_policy_ids                   = try(subnet.service_endpoint_policy_ids, null)
       subnet_name                                   = try(subnet.name, join("-", [var.naming.subnet, subnet_key]))
-      location                                      = var.vnet.location
-      tags                                          = try(subnet.nsg.tags, {})
+      location                                      = coalesce(lookup(var.vnet, "location", null), var.location)
+      tags                                          = try(subnet.nsg.tags, var.tags, null)
 
       delegations = [for d in try(subnet.delegations, {}) : {
         name    = d.name
