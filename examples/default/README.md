@@ -5,7 +5,7 @@ This example illustrates the default virtual network setup, in its simplest form
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.2"
+  version = "~> 2.3"
 
   naming = local.naming
 
