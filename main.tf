@@ -3,10 +3,10 @@ data "azurerm_subscription" "current" {}
 # virtual network
 resource "azurerm_virtual_network" "vnet" {
   name                    = var.vnet.name
-  resource_group_name     = var.vnet.resourcegroup
-  location                = var.vnet.location
+  resource_group_name     = coalesce(lookup(var.vnet, "resourcegroup", null), var.resourcegroup)
+  location                = coalesce(lookup(var.vnet, "location", null), var.location)
   address_space           = var.vnet.cidr
-  tags                    = try(var.vnet.tags, {})
+  tags                    = try(var.vnet.tags, var.tags, null)
   edge_zone               = try(var.vnet.edge_zone, null)
   bgp_community           = try(var.vnet.bgp_community, null)
   flow_timeout_in_minutes = try(var.vnet.flow_timeout_in_minutes, null)
@@ -37,7 +37,7 @@ resource "azurerm_subnet" "subnets" {
   }
 
   name                                          = each.value.subnet_name
-  resource_group_name                           = var.vnet.resourcegroup
+  resource_group_name                           = coalesce(lookup(var.vnet, "resourcegroup", null), var.resourcegroup)
   virtual_network_name                          = each.value.virtual_network_name
   address_prefixes                              = each.value.address_prefixes
   service_endpoints                             = each.value.endpoints
@@ -64,7 +64,7 @@ resource "azurerm_network_security_group" "nsg" {
   for_each = local.nsg
 
   name                = each.value.nsg_name
-  resource_group_name = var.vnet.resourcegroup
+  resource_group_name = coalesce(lookup(var.vnet, "resourcegroup", null), var.resourcegroup)
   location            = each.value.location
   tags                = each.value.tags
 
@@ -119,7 +119,7 @@ resource "azurerm_route_table" "rt" {
   }
 
   name                          = each.value.rt_name
-  resource_group_name           = var.vnet.resourcegroup
+  resource_group_name           = coalesce(lookup(var.vnet, "resourcegroup", null), var.resourcegroup)
   location                      = each.value.location
   disable_bgp_route_propagation = each.value.disable_bgp_route_propagation
   tags                          = each.value.tags
@@ -140,10 +140,10 @@ resource "azurerm_route_table" "shd_rt" {
   for_each = try(var.vnet.route_tables, {})
 
   name                          = try(each.value.name, "${var.naming.route_table}-${each.key}")
-  resource_group_name           = var.vnet.resourcegroup
-  location                      = var.vnet.location
+  resource_group_name           = coalesce(lookup(var.vnet, "resourcegroup", null), var.resourcegroup)
+  location                      = coalesce(lookup(var.vnet, "location", null), var.location)
   disable_bgp_route_propagation = try(each.value.disable_bgp_route_propagation, false)
-  tags                          = try(each.value.tags, {})
+  tags                          = try(each.value.tags, var.tags, null)
 
   dynamic "route" {
     for_each = each.value.routes
