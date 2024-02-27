@@ -5,7 +5,7 @@ This example highlights the utilization of service endpoints on subnets.
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.2"
+  version = "~> 2.3"
 
   naming = local.naming
 

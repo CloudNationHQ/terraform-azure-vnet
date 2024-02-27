@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.2.1...v2.3.0) (2024-02-27)
+
+
+### Features
+
+* add conditional expressions to allow some global properties ([#46](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/46)) ([7e9143d](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/7e9143d761a4d06b21b484334badb3b65b24036f))
+
 ## [2.2.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.2.0...v2.2.1) (2024-02-24)
 
 
