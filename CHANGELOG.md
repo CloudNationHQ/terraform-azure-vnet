@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.3.0...v2.4.0) (2024-03-06)
+
+
+### Features
+
+* **deps:** bump github.com/stretchr/testify in /tests ([#48](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/48)) ([47e674a](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/47e674acbe60c97bfda45c03c33a1a8656aef532))
+* update documentation ([#49](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/49)) ([6398a09](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/6398a099a54016f83a36f03cb6e90fd2979f8a5d))
+
 ## [2.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.2.1...v2.3.0) (2024-02-27)
 
 
