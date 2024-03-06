@@ -5,7 +5,7 @@ This example showcases virtual wan integration by establishing a vhub connection
 ```hcl
 module "vhub-connection" {
   source  = "cloudnationhq/vnet/azure//modules/vhub-connection"
-  version = "~> 2.3"
+  version = "~> 2.4"
 
   providers = {
     azurerm = azurerm.connectivity
