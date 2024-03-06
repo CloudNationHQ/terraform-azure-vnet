@@ -1,12 +1,20 @@
-locals {
-  naming = {
-    # lookup outputs to have consistent naming
-    for type in local.naming_types : type => lookup(module.naming, type).name
-  }
+This example highlights the complete usage.
 
-  naming_types = ["subnet", "network_security_group", "route_table"]
+## Usage
+
+```hcl
+module "network" {
+  source  = "cloudnationhq/vnet/azure"
+  version = "~> 2.0"
+
+  naming = local.naming
+  vnet   = local.vnet
 }
+```
 
+The module uses the below locals for configuration:
+
+```hcl
 locals {
   vnet = {
     name          = module.naming.virtual_network.name
@@ -55,7 +63,9 @@ locals {
     }
   }
 }
+```
 
+```hcl
 locals {
   rules = {
     myhttps = {
@@ -82,3 +92,4 @@ locals {
     }
   }
 }
+```

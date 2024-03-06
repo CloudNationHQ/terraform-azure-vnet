@@ -19,7 +19,7 @@ module "rg" {
 
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   naming = local.naming
 
@@ -40,7 +40,7 @@ module "network" {
 
 module "vhub-connection" {
   source  = "cloudnationhq/vnet/azure//modules/vhub-connection"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   providers = {
     azurerm = azurerm.connectivity
