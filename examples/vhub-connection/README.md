@@ -1,4 +1,4 @@
-This example showcases the integration of a virtual network with azure virtual wan by establishing a vhub connection. This connection extends network capabilities by allowing seamless interconnectivity between distributed network segments.
+This example showcases virtual wan integration by establishing a vhub connection.
 
 ## Usage: virtual hub connection
 

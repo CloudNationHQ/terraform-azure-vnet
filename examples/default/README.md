@@ -1,11 +1,11 @@
-This example illustrates the default virtual network setup, in its simplest form. It lays out a foundational network structure, guaranteeing protected and contained communication within its scope.
+This example illustrates the default setup in its simplest form.
 
 ## Usage: simple
 
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.3"
+  version = "~> 2.0"
 
   naming = local.naming
 
@@ -25,7 +25,7 @@ Additionally, for certain scenarios, the example below highlights the ability to
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   for_each = local.vnets
 
@@ -81,7 +81,7 @@ locals {
 }
 ```
 
-The below maps resource types to their corresponding outputs from the naming module, ensuring consistent naming conventions across resources
+The below local maps resource types to their corresponding outputs from the naming module, ensuring consistent naming conventions across resources
 
 ```hcl
 locals {

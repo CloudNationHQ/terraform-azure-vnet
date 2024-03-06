@@ -5,7 +5,7 @@ This example shows the use of delegations on subnets.
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.3"
+  version = "~> 2.0"
 
   naming = local.naming
 
@@ -18,6 +18,7 @@ module "network" {
     subnets = {
       sn1 = {
         cidr = ["10.18.1.0/24"]
+        nsg  = {}
         delegations = {
           sql = {
             name = "Microsoft.Sql/managedInstances"
@@ -31,6 +32,7 @@ module "network" {
       }
       sn2 = {
         cidr = ["10.18.2.0/24"]
+        nsg  = {}
         delegations = {
           web = { name = "Microsoft.Web/serverFarms" }
         }

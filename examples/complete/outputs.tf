@@ -3,9 +3,10 @@ output "vnet" {
 }
 
 output "subnets" {
-  value = { for s in module.network.subnets : s.name => {
-    id   = s.id
-    name = s.name
+  value = {
+    for s in module.network.subnets : s.name => {
+      id   = s.id
+      name = s.name
     }
   }
 }
