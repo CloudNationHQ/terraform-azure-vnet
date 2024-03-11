@@ -49,7 +49,7 @@ resource "azurerm_subnet" "subnets" {
     for_each = each.value.delegations
 
     content {
-      name = delegation.key
+      name = delegation.value.delegation_key
 
       service_delegation {
         name    = delegation.value.name
