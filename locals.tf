@@ -47,9 +47,10 @@ locals {
       location                                      = coalesce(lookup(var.vnet, "location", null), var.location)
       tags                                          = try(subnet.nsg.tags, var.tags, null)
 
-      delegations = [for d in try(subnet.delegations, {}) : {
-        name    = d.name
-        actions = try(d.actions, [])
+      delegations = [for key, del in try(subnet.delegations, {}) : {
+        delegation_key = key
+        name           = del.name
+        actions        = try(del.actions, [])
       }]
     }
   ]) : []
