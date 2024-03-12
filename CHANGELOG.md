@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.4.0...v2.4.1) (2024-03-12)
+
+
+### Bug Fixes
+
+* refactor delegation key to actual key provided instead of a numbered index ([#51](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/51)) ([fe45101](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/fe4510161eb931f6779af11ecc3f1216005d4dbe))
+
 ## [2.4.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.3.0...v2.4.0) (2024-03-06)
 
 
