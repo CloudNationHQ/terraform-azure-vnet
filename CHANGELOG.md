@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.5.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.4.1...v2.5.0) (2024-06-07)
+
+
+### Features
+
+* create pull request template ([#60](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/60)) ([ccd2146](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/ccd214627cc73f5ad153826c9dc9f01f55a28c2b))
+* **deps:** bump github.com/Azure/azure-sdk-for-go/sdk/azidentity ([#55](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/55)) ([028b357](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/028b357b88125370388e379b7a4796ad2472d377))
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#59](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/59)) ([c0b1a88](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/c0b1a881c526287a7dcb96405f62cf7e441ad3eb))
+* **deps:** bump github.com/hashicorp/go-getter in /tests ([#57](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/57)) ([929717b](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/929717b1c9750c752ef4e6cdad5de41403048b6e))
+* **deps:** bump golang.org/x/net from 0.19.0 to 0.23.0 in /tests ([#56](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/56)) ([9bd9abc](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/9bd9abc4981b21a1d7faa532d5226f0e565ad88f))
+* **deps:** bump google.golang.org/protobuf in /tests ([#53](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/53)) ([da2a415](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/da2a415ad6a1d46983f6eda25c067b7ecd6835be))
+
 ## [2.4.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.4.0...v2.4.1) (2024-03-12)
 
 

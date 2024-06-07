@@ -5,7 +5,7 @@ This example illustrates the default setup in its simplest form.
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.4"
+  version = "~> 2.5"
 
   naming = local.naming
 
