@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.6.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.5.0...v2.6.0) (2024-07-02)
+
+
+### Features
+
+* add issue template ([#66](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/66)) ([2c09fb2](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/2c09fb20e919440c2c418d56c0f2a12939f7bcac))
+* **deps:** bump github.com/Azure/azure-sdk-for-go/sdk/azidentity ([#62](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/62)) ([d35737a](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/d35737ab65400e16780e0a19935892593c081bf7))
+* **deps:** bump github.com/Azure/azure-sdk-for-go/sdk/azidentity ([#63](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/63)) ([6cad8df](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/6cad8dfea64266d7b305c108dfdec87d4c9f145b))
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#65](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/65)) ([c5d10b5](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/c5d10b5c378ae1d954ab6e6813b5187b159df485))
+* **deps:** bump github.com/hashicorp/go-getter in /tests ([#64](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/64)) ([1282b52](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/1282b52890aed97a028addbbe92d62ab6e7d5fdb))
+
 ## [2.5.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.4.1...v2.5.0) (2024-06-07)
 
 
