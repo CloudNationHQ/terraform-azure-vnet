@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.6.0...v2.7.0) (2024-07-03)
+
+
+### Features
+
+* update terraform random module version to 3.6 ([#69](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/69)) ([88694d6](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/88694d68184a31af4f6e99506a34ea850dba5eb8))
+
 ## [2.6.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.5.0...v2.6.0) (2024-07-02)
 
 

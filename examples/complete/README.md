@@ -5,7 +5,7 @@ This example highlights the complete usage.
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.6"
+  version = "~> 2.7"
 
   naming = local.naming
   vnet   = local.vnet
