@@ -67,6 +67,7 @@ A last key goal is to separate logic from configuration in the module, thereby e
 | :-- | :-- |
 | `vnet` | vnet setup details |
 | `subnets` | subnet configuration specifics |
+| `nsg` | network security group configuration specifics |
 | `subscriptionId` | contains the current subsriptionId |
 
 ## Testing
