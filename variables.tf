@@ -1,5 +1,5 @@
 variable "vnet" {
-  description = "Contains all log analytics workspace settings"
+  description = "Contains all virtual network settings"
   type        = any
 }
 
