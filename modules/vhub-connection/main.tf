@@ -1,7 +1,7 @@
 # virtual hub
 data "azurerm_virtual_hub" "vhub" {
   name                = var.virtual_hub.name
-  resource_group_name = var.virtual_hub.resourcegroup
+  resource_group_name = var.virtual_hub.resource_group
 }
 
 # connection

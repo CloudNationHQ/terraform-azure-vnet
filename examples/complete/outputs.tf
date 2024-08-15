@@ -11,6 +11,6 @@ output "subnets" {
   }
 }
 
-output "subscriptionId" {
-  value = module.network.subscriptionId
+output "subscription_id" {
+  value = module.network.subscription_id
 }
