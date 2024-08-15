@@ -47,9 +47,9 @@ module "vhub-connection" {
   }
 
   virtual_hub = {
-    name          = "vhub-westeurope"
+    name           = "vhub-westeurope"
     resource_group = "rg-vwan-shared"
-    connection    = module.naming.virtual_hub_connection.name
-    vnet          = module.network.vnet.id
+    connection     = module.naming.virtual_hub_connection.name
+    vnet           = module.network.vnet.id
   }
 }
