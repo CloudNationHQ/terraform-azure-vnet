@@ -84,7 +84,7 @@ func TestVirtualNetwork(t *testing.T) {
 		resourceGroupName, ok := vnet["resource_group_name"]
 		require.True(t, ok, "Resource group name not found in terraform output")
 
-		subscriptionID := terraform.Output(t, tfOpts, "subscriptionId")
+		subscriptionID := terraform.Output(t, tfOpts, "subscription_id")
 		require.NotEmpty(t, subscriptionID, "Subscription ID not found in terraform output")
 
 		cred, err := azidentity.NewDefaultAzureCredential(nil)

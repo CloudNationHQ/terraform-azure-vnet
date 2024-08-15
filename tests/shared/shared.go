@@ -21,6 +21,7 @@ type TestCase struct {
 func GetTerraformOptions(terraformDir string) *terraform.Options {
 	return &terraform.Options{
 		TerraformDir: terraformDir,
+		Parallelism:  2,
 		NoColor:      true,
 	}
 }

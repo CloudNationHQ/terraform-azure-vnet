@@ -40,7 +40,7 @@ module "network" {
 
 module "vhub-connection" {
   source  = "cloudnationhq/vnet/azure//modules/vhub-connection"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   providers = {
     azurerm = azurerm.connectivity
@@ -48,7 +48,7 @@ module "vhub-connection" {
 
   virtual_hub = {
     name          = "vhub-westeurope"
-    resourcegroup = "rg-vwan-shared"
+    resource_group = "rg-vwan-shared"
     connection    = module.naming.virtual_hub_connection.name
     vnet          = module.network.vnet.id
   }

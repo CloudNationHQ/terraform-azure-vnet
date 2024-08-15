@@ -19,15 +19,15 @@ module "rg" {
 
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 1.0"
+  version = "~> 3.0"
 
   naming = local.naming
 
   vnet = {
-    name          = module.naming.virtual_network.name
-    cidr          = ["10.18.0.0/16"]
-    location      = module.rg.groups.demo.location
-    resourcegroup = module.rg.groups.demo.name
+    name           = module.naming.virtual_network.name
+    cidr           = ["10.18.0.0/16"]
+    location       = module.rg.groups.demo.location
+    resource_group = module.rg.groups.demo.name
 
     subnets = {
       sn1 = {
