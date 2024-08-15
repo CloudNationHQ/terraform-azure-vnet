@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.9.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.8.0...v2.9.0) (2024-08-15)
+
+
+### Features
+
+* added code of conduct and security documentation ([#76](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/76)) ([185f44f](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/185f44fb3b43fc8ce6b1d19314bebfd9ef3f3c30))
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#73](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/73)) ([41649a8](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/41649a8b73a4fe3127f164d8e5df252e996e6f54))
+
 ## [2.8.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.7.0...v2.8.0) (2024-08-02)
 
 
