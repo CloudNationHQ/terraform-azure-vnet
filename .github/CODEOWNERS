@@ -1,1 +1,4 @@
-* @CloudNationHQ/SG-MDM-GitHub-Azure-Wam
+*                           @CloudNationHQ/SG-MDM-GitHub-Azure-Wam
+CODEOWNERS                  @CloudNationHQ/SG-MDM-GitHub-Azure-Wam-Release
+CHANGELOG.md                @CloudNationHQ/SG-MDM-GitHub-Azure-Wam-Release
+release-please.yml          @CloudNationHQ/SG-MDM-GitHub-Azure-Wam-Release
