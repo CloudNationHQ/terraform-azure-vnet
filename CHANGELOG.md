@@ -5,11 +5,23 @@
 
 ### ⚠ BREAKING CHANGES
 
-* * data structure has changed due to renaming of properties and output variables.
+* data structure has changed due to renaming of properties and output variables.
 
 ### Features
 
 * aligned several properties ([#78](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/78)) ([d28b39a](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/d28b39aa54fed5d2c8a8ffddda4eeeeb3e8bdc53))
+
+### Upgrade from v2.9.0 to v3.0.0:
+
+- Update module reference to: `version = "~> 3.0"`
+- Rename properties in vnet object:
+  - resourcegroup -> resource_group
+  - private_endpoint_network_policies_enabled -> private_endpoint_network_policies
+- Rename variable (optional):
+  - resourcegroup -> resource_group
+- Rename output variable:
+  - subscriptionId -> subscription_id'
+  - nsg -> network_security_group
 
 ## [2.9.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.8.0...v2.9.0) (2024-08-15)
 
