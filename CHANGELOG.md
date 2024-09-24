@@ -9,7 +9,7 @@
 
 ### Features
 
-* upgrade azurerm provder to v4 ([#82](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/82)) ([88dfbce](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/88dfbcebedb6c0812ae66bda15e172c156b76c13))
+* upgrade azurerm provider to v4 ([#82](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/82)) ([88dfbce](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/88dfbcebedb6c0812ae66bda15e172c156b76c13))
 
 ### Upgrade from v3.1.0 to v4.0.0:
 
