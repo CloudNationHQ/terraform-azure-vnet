@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v3.0.0...v3.1.0) (2024-09-24)
+
+
+### Features
+
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#80](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/80)) ([fc58d91](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/fc58d9154ca249ef8ff04d94020f396763b956ec))
+
 ## [3.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v2.9.0...v3.0.0) (2024-08-15)
 
 
