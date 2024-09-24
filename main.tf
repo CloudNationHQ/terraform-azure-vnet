@@ -122,7 +122,7 @@ resource "azurerm_route_table" "rt" {
   name                          = each.value.rt_name
   resource_group_name           = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
   location                      = each.value.location
-  disable_bgp_route_propagation = each.value.disable_bgp_route_propagation
+  bgp_route_propagation_enabled = each.value.bgp_route_propagation_enabled
   tags                          = each.value.tags
 
   dynamic "route" {
@@ -143,7 +143,7 @@ resource "azurerm_route_table" "shd_rt" {
   name                          = try(each.value.name, "${var.naming.route_table}-${each.key}")
   resource_group_name           = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
   location                      = coalesce(lookup(var.vnet, "location", null), var.location)
-  disable_bgp_route_propagation = try(each.value.disable_bgp_route_propagation, false)
+  bgp_route_propagation_enabled = try(each.value.bgp_route_propagation_enabled, true)
   tags                          = try(each.value.tags, var.tags, null)
 
   dynamic "route" {

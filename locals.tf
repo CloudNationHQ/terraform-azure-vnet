@@ -27,7 +27,7 @@ locals {
       location                      = coalesce(lookup(var.vnet, "location", null), var.location)
       route_table                   = try(lookup(subnet, "route", {}), {})
       shd_route_table               = try(subnet.route_table, null)
-      disable_bgp_route_propagation = try(subnet.route.disable_bgp_route_propagation, false)
+      bgp_route_propagation_enabled = try(subnet.route.bgp_route_propagation_enabled, true)
     }
     if lookup(subnet, "route", null) != null || lookup(subnet, "route_table", null) != null
   }
