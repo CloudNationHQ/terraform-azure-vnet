@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v4.0.0...v4.0.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* fix defaults private endpoint network policies ([#84](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/84)) ([f0258d5](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/f0258d57cd58c726b98829c4f5b5ddd61cd94536))
+
 ## [4.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v3.1.0...v4.0.0) (2024-09-24)
 
 
