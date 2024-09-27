@@ -37,7 +37,7 @@ locals {
   subnets = length(lookup(var.vnet, "subnets", {})) > 0 ? flatten([
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : {
       subnet_key                                    = subnet_key
-      virtual_network_name                          = azurerm_virtual_network.vnet.name
+      virtual_network_name                          = var.vnet.name
       address_prefixes                              = subnet.cidr
       endpoints                                     = try(subnet.endpoints, [])
       private_link_service_network_policies_enabled = try(subnet.private_link_service_network_policies_enabled, false)

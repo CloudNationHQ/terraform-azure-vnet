@@ -3,6 +3,12 @@ variable "vnet" {
   type        = any
 }
 
+variable "use_existing_vnet" {
+  description = "use existing vnets globally"
+  type        = bool
+  default     = false
+}
+
 variable "naming" {
   description = "Used for naming purposes"
   type        = map(string)
