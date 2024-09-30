@@ -32,7 +32,7 @@ module "vnet" {
     subnets = {
       sn1 = {
         cidr = ["10.0.0.0/24"]
-        nsg = {}
+        nsg  = {}
       }
     }
   }
@@ -43,21 +43,21 @@ module "use_existing" {
   # version = "~> 4.0"
   source = "../../"
 
-  naming = local.naming
+  naming            = local.naming
   use_existing_vnet = true
 
   vnet = {
     name           = module.naming.virtual_network.name
-    location = module.rg.groups.demo.location
+    location       = module.rg.groups.demo.location
     resource_group = module.rg.groups.demo.name
     subnets = {
       sn2 = {
         cidr = ["10.0.1.0/24"]
-        nsg = {}
+        nsg  = {}
       }
       sn3 = {
         cidr = ["10.0.2.0/24"]
-        nsg = {}
+        nsg  = {}
       }
     }
   }
