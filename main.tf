@@ -1,7 +1,20 @@
 data "azurerm_subscription" "current" {}
 
+data "azurerm_virtual_network" "existing" {
+  for_each = var.use_existing_vnet == true ? {
+    (var.vnet.name) = var.vnet
+  } : {}
+
+  name                = var.vnet.name
+  resource_group_name = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
+}
+
 # virtual network
 resource "azurerm_virtual_network" "vnet" {
+  for_each = var.use_existing_vnet == false ? {
+    (var.vnet.name) = var.vnet
+  } : {}
+
   name                    = var.vnet.name
   resource_group_name     = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
   location                = coalesce(lookup(var.vnet, "location", null), var.location)
@@ -26,8 +39,12 @@ resource "azurerm_virtual_network" "vnet" {
 
 # dns
 resource "azurerm_virtual_network_dns_servers" "dns" {
+  for_each = var.use_existing_vnet == false ? {
+    (var.vnet.name) = var.vnet
+  } : {}
+
   dns_servers        = try(var.vnet.dns_servers, [])
-  virtual_network_id = azurerm_virtual_network.vnet.id
+  virtual_network_id = azurerm_virtual_network.vnet[each.key].id
 }
 
 # subnets

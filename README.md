@@ -69,6 +69,7 @@ End-to-end testing is not conducted on these modules, as they are individual com
 | `naming` | contains naming convention | string | yes |
 | `location` | default azure region tho be used | string | no |
 | `resource_group` | default resource group to be used | string | no |
+| `use_existing_vnet` | make use of an existing vnet | bool | no |
 | `tags` | tags to be added to the resources | map(string) | no |
 
 ## Outputs
