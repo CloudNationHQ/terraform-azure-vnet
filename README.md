@@ -50,6 +50,7 @@ End-to-end testing is not conducted on these modules, as they are individual com
 | Name | Type |
 | :-- | :-- |
 | [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) | resource |
+| [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) | data source |
 | [azurerm_virtual_network_dns_servers](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_dns_servers) | resource |
 | [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) | resource |
 | [azurerm_network_security_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group) | resource |
@@ -69,6 +70,7 @@ End-to-end testing is not conducted on these modules, as they are individual com
 | `naming` | contains naming convention | string | yes |
 | `location` | default azure region tho be used | string | no |
 | `resource_group` | default resource group to be used | string | no |
+| `use_existing_vnet` | make use of an existing vnet | bool | no |
 | `tags` | tags to be added to the resources | map(string) | no |
 
 ## Outputs

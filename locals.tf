@@ -37,7 +37,7 @@ locals {
   subnets = length(lookup(var.vnet, "subnets", {})) > 0 ? flatten([
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : {
       subnet_key                                    = subnet_key
-      virtual_network_name                          = azurerm_virtual_network.vnet.name
+      virtual_network_name                          = var.vnet.name
       address_prefixes                              = subnet.cidr
       endpoints                                     = try(subnet.endpoints, [])
       private_link_service_network_policies_enabled = try(subnet.private_link_service_network_policies_enabled, false)
@@ -45,7 +45,6 @@ locals {
       default_outbound_access_enabled               = try(subnet.default_outbound_access_enabled, null)
       service_endpoint_policy_ids                   = try(subnet.service_endpoint_policy_ids, null)
       subnet_name                                   = try(subnet.name, join("-", [var.naming.subnet, subnet_key]))
-      location                                      = coalesce(lookup(var.vnet, "location", null), var.location)
       tags                                          = try(subnet.nsg.tags, var.tags, null)
 
       delegations = [for key, del in try(subnet.delegations, {}) : {

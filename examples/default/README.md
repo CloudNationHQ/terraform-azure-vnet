@@ -93,3 +93,33 @@ locals {
   naming_types = ["subnet", "network_security_group"]
 }
 ```
+
+## Usage existing vnet
+
+In case a vnet is already present and this module is going to be used solely for creating subnets in combination with nsg's, route tables, the use_existing_vnet can be submitted as in the following example:
+
+```hcl
+module "use_existing" {
+  source  = "cloudnationhq/vnet/azure"
+  version = "~> 5.0"
+
+  naming            = local.naming
+  use_existing_vnet = true
+  location          = module.rg.groups.demo.location
+  resource_group    = module.rg.groups.demo.name
+
+  vnet = {
+    name           = module.naming.virtual_network.name
+    subnets = {
+      sn1 = {
+        cidr = ["10.0.1.0/24"]
+        nsg  = {}
+      }
+      sn2 = {
+        cidr = ["10.0.2.0/24"]
+        nsg  = {}
+      }
+    }
+  }
+}
+```
