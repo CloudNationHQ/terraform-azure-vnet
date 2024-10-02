@@ -1,5 +1,5 @@
 output "vnet" {
-  value = azurerm_virtual_network.vnet
+  value = merge(azurerm_virtual_network.vnet, data.azurerm_virtual_network.existing)
 }
 
 output "subnets" {
