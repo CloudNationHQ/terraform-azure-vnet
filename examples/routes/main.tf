@@ -11,7 +11,7 @@ module "rg" {
 
   groups = {
     demo = {
-      name     = module.naming.resource_group.name
+      name     = module.naming.resource_group.name_unique
       location = "northeurope"
     }
   }
@@ -19,7 +19,7 @@ module "rg" {
 
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   naming = local.naming
 
@@ -31,19 +31,19 @@ module "network" {
 
     subnets = {
       sn1 = {
-        cidr        = ["10.18.1.0/24"]
-        route_table = "shd"
-        nsg         = {}
+        cidr               = ["10.18.1.0/24"]
+        route_table_shared = "shd"
+        nsg                = {}
       },
       sn2 = {
-        cidr        = ["10.18.2.0/24"]
-        route_table = "shd"
-        nsg         = {}
+        cidr               = ["10.18.2.0/24"]
+        route_table_shared = "shd"
+        nsg                = {}
       },
       sn3 = {
         cidr = ["10.18.3.0/24"]
         nsg  = {}
-        route = {
+        route_table = {
           routes = {
             rt3 = {
               address_prefix = "storage"
@@ -53,11 +53,13 @@ module "network" {
         }
       }
     }
-
     route_tables = {
       shd = {
         routes = {
-          rt1 = { address_prefix = "0.0.0.0/0", next_hop_type = "Internet" }
+          rt1 = {
+            address_prefix = "0.0.0.0/0"
+            next_hop_type  = "Internet"
+          }
         }
       }
     }

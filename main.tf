@@ -160,49 +160,81 @@ resource "azurerm_route_table" "shd_rt" {
   bgp_route_propagation_enabled = try(each.value.bgp_route_propagation_enabled, true)
   tags                          = try(each.value.tags, var.tags, null)
 
-  dynamic "route" {
-    for_each = each.value.routes
-
-    content {
-      name                   = route.key
-      address_prefix         = lookup(route.value, "address_prefix", null)
-      next_hop_type          = lookup(route.value, "next_hop_type", null)
-      next_hop_in_ip_address = lookup(route.value, "next_hop_in_ip_address", null)
-    }
+  lifecycle {
+    ignore_changes = [route]
   }
+}
+
+resource "azurerm_route" "shared_routes" {
+  for_each = {
+    for route_item in flatten([
+      for rt_key, rt in lookup(var.vnet, "route_tables", {}) : [
+        for route_key, route_value in try(rt.routes, {}) : {
+
+          key           = "${rt_key}_${route_key}"
+          route_table   = azurerm_route_table.shd_rt[rt_key]
+          route_name    = route_key
+          route_details = route_value
+        }
+      ]
+    ]) : route_item.key => route_item
+  }
+
+  name                   = each.value.route_name
+  resource_group_name    = each.value.route_table.resource_group_name
+  route_table_name       = each.value.route_table.name
+  address_prefix         = each.value.route_details.address_prefix
+  next_hop_type          = each.value.route_details.next_hop_type
+  next_hop_in_ip_address = lookup(each.value.route_details, "next_hop_in_ip_address", null)
 }
 
 # individual route tables
 resource "azurerm_route_table" "rt" {
   for_each = {
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
-    if lookup(subnet, "route", null) != null && lookup(subnet, "route_table", null) == null
+    if lookup(subnet, "route_table", null) != null
   }
 
-  name                          = try(each.value.route.name, "${var.naming.route_table}-${each.key}")
+  name                          = try(each.value.route_table.name, "${var.naming.route_table}-${each.key}")
   resource_group_name           = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
   location                      = coalesce(lookup(var.vnet, "location", null), var.location)
-  bgp_route_propagation_enabled = try(each.value.route.bgp_route_propagation_enabled, true)
-  tags                          = try(each.value.route.tags, var.tags, null)
+  bgp_route_propagation_enabled = try(each.value.route_table.bgp_route_propagation_enabled, true)
+  tags                          = try(each.value.route_table.tags, var.tags, null)
 
-  dynamic "route" {
-    for_each = try(each.value.route.routes, {})
-
-    content {
-      name                   = route.key
-      address_prefix         = lookup(route.value, "address_prefix", null)
-      next_hop_type          = lookup(route.value, "next_hop_type", null)
-      next_hop_in_ip_address = lookup(route.value, "next_hop_in_ip_address", null)
-    }
+  lifecycle {
+    ignore_changes = [route]
   }
+}
+
+resource "azurerm_route" "routes" {
+  for_each = {
+    for route_item in flatten([
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : [
+        for route_key, route_value in try(subnet.route_table.routes, {}) : {
+
+          key         = "${subnet_key}_${route_key}"
+          route_table = azurerm_route_table.rt[subnet_key]
+          route_name  = route_key
+          route       = route_value
+        }
+      ]
+    ]) : route_item.key => route_item
+  }
+
+  name                   = each.value.route_name
+  resource_group_name    = each.value.route_table.resource_group_name
+  route_table_name       = each.value.route_table.name
+  address_prefix         = each.value.route.address_prefix
+  next_hop_type          = each.value.route.next_hop_type
+  next_hop_in_ip_address = lookup(each.value.route, "next_hop_in_ip_address", null)
 }
 
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
-    if lookup(subnet, "route", null) != null || lookup(subnet, "route_table", null) != null
+    if lookup(subnet, "route_table_shared", null) != null || lookup(subnet, "route_table", null) != null
   }
 
   subnet_id      = azurerm_subnet.subnets[each.key].id
-  route_table_id = lookup(each.value, "route_table", null) != null ? azurerm_route_table.shd_rt[each.value.route_table].id : azurerm_route_table.rt[each.key].id
+  route_table_id = lookup(each.value, "route_table_shared", null) != null ? azurerm_route_table.shd_rt[each.value.route_table_shared].id : azurerm_route_table.rt[each.key].id
 }
