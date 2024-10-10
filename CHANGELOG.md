@@ -5,11 +5,18 @@
 
 ### ⚠ BREAKING CHANGES
 
-* * data structure has changed due to renaming of properties.
+* data structure has changed due to renaming of properties.
 
 ### Features
 
 * aligned route table properties ([#92](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/92)) ([5a61ce4](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/5a61ce4b244b32dfc06474a192be38a36f487d3b))
+
+### Upgrade from v5.0.1 to v6.0.0:
+
+- Update module reference to: `version = "~> 6.0"`
+- Rename properties in vnet object:
+  - within subnets the shared route_table property has been renamed to route_table_shared
+  - within subnets the individual route property has been renamed to route_table
 
 ## [5.0.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v5.0.0...v5.0.1) (2024-10-10)
 
