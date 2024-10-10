@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v5.0.0...v5.0.1) (2024-10-10)
+
+
+### Bug Fixes
+
+* fix vnet dependency order for proper destruction ([#90](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/90)) ([e07d0df](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/e07d0df24e573ec6971bc5d1aeefa54c1973aab6))
+
 ## [5.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v4.0.1...v5.0.0) (2024-10-02)
 
 
