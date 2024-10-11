@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v6.0.0...v6.1.0) (2024-10-11)
+
+
+### Features
+
+* auto generated docs and refine makefile ([#94](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/94)) ([151ed89](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/151ed89560f69a74527a6f814f653d6de874b139))
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#88](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/88)) ([89aeb8a](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/89aeb8ab7e2c9894c6f20848fecf24e0198e9f7f))
+
 ## [6.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v5.0.1...v6.0.0) (2024-10-10)
 
 
