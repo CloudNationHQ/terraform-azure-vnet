@@ -1,5 +1,5 @@
 output "vnet" {
-  value = merge(azurerm_virtual_network.vnet, data.azurerm_virtual_network.existing)
+  value = var.use_existing_vnet ? try(data.azurerm_virtual_network.existing["vnet"], null) : try(azurerm_virtual_network.vnet["vnet"], null)
 }
 
 output "subnets" {

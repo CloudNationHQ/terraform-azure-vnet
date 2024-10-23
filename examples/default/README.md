@@ -5,7 +5,7 @@ This example illustrates the default setup in its simplest form.
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.8"
+  version = "~> 7.0"
 
   naming = local.naming
 
@@ -25,7 +25,7 @@ Additionally, for certain scenarios, the example below highlights the ability to
 ```hcl
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 2.0"
+  version = "~> 7.0"
 
   for_each = local.vnets
 
@@ -101,7 +101,7 @@ In case a vnet is already present and this module is going to be used solely for
 ```hcl
 module "use_existing" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 5.0"
+  version = "~> 7.0"
 
   naming            = local.naming
   use_existing_vnet = true

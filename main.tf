@@ -3,7 +3,7 @@ data "azurerm_subscription" "current" {}
 # existing virtual network
 data "azurerm_virtual_network" "existing" {
   for_each = var.use_existing_vnet ? {
-    (var.vnet.name) = var.vnet
+    "vnet" = var.use_existing_vnet
   } : {}
 
   name                = var.vnet.name
@@ -13,7 +13,7 @@ data "azurerm_virtual_network" "existing" {
 # virtual network
 resource "azurerm_virtual_network" "vnet" {
   for_each = var.use_existing_vnet ? {} : {
-    (var.vnet.name) = var.vnet
+    "vnet" = var.use_existing_vnet
   }
 
   name                    = var.vnet.name
@@ -39,11 +39,11 @@ resource "azurerm_virtual_network" "vnet" {
 
 resource "azurerm_virtual_network_dns_servers" "dns" {
   for_each = var.use_existing_vnet ? {} : {
-    (var.vnet.name) = var.vnet
+    "vnet" = var.use_existing_vnet
   }
 
   dns_servers        = try(var.vnet.dns_servers, [])
-  virtual_network_id = azurerm_virtual_network.vnet[each.key].id
+  virtual_network_id = azurerm_virtual_network.vnet["vnet"].id
 }
 
 # subnets
@@ -71,7 +71,7 @@ resource "azurerm_subnet" "subnets" {
 
   name                                          = each.value.subnet_name
   resource_group_name                           = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
-  virtual_network_name                          = var.use_existing_vnet ? data.azurerm_virtual_network.existing[var.vnet.name].name : azurerm_virtual_network.vnet[var.vnet.name].name
+  virtual_network_name                          = var.use_existing_vnet ? data.azurerm_virtual_network.existing["vnet"].name : azurerm_virtual_network.vnet["vnet"].name
   address_prefixes                              = each.value.address_prefixes
   service_endpoints                             = each.value.endpoints
   private_link_service_network_policies_enabled = each.value.private_link_service_network_policies_enabled
