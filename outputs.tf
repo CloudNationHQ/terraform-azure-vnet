@@ -1,5 +1,6 @@
 output "vnet" {
-  value = merge(azurerm_virtual_network.vnet, data.azurerm_virtual_network.existing)
+  description = "contains frontdoor configuration"
+  value       = lookup(var.vnet, "existing", null) != null ? data.azurerm_virtual_network.existing["vnet"] : azurerm_virtual_network.vnet["vnet"]
 }
 
 output "subnets" {
@@ -7,9 +8,5 @@ output "subnets" {
 }
 
 output "network_security_group" {
-  value = azurerm_network_security_group.nsg
-}
-
-output "subscription_id" {
-  value = data.azurerm_subscription.current.subscription_id
+  value = azurerm_network_security_group.this
 }

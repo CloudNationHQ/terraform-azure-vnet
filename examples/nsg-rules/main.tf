@@ -11,29 +11,68 @@ module "rg" {
 
   groups = {
     demo = {
-      name     = module.naming.resource_group.name
-      location = "northeurope"
+      name     = module.naming.resource_group.name_unique
+      location = "westeurope"
     }
   }
 }
 
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 6.0"
+  version = "~> 7.0"
 
   naming = local.naming
 
   vnet = {
     name           = module.naming.virtual_network.name
-    cidr           = ["10.18.0.0/16"]
+    cidr           = ["10.0.0.0/16"]
     location       = module.rg.groups.demo.location
     resource_group = module.rg.groups.demo.name
 
     subnets = {
       sn1 = {
-        cidr = ["10.18.1.0/24"]
-        nsg = {
-          rules = local.rules
+        cidr = ["10.0.1.0/24"]
+        shared = {
+          network_security_group = "shd"
+        }
+      },
+      sn2 = {
+        cidr = ["10.0.2.0/24"]
+        shared = {
+          network_security_group = "shd"
+        }
+      },
+      sn3 = {
+        cidr = ["10.0.3.0/24"]
+        network_security_group = {
+          rules = {
+            myhttps = {
+              priority                   = 100
+              direction                  = "Inbound"
+              access                     = "Allow"
+              protocol                   = "Tcp"
+              source_port_range          = "*"
+              destination_port_range     = "443"
+              source_address_prefix      = "10.151.1.0/24"
+              destination_address_prefix = "*"
+            }
+          }
+        }
+      }
+    }
+    network_security_groups = {
+      shd = {
+        rules = {
+          allow_http = {
+            priority                   = 100
+            direction                  = "Inbound"
+            access                     = "Allow"
+            protocol                   = "Tcp"
+            source_port_range          = "*"
+            destination_port_range     = "80"
+            source_address_prefix      = "*"
+            destination_address_prefix = "*"
+          }
         }
       }
     }
