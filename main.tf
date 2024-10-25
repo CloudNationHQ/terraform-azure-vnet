@@ -1,240 +1,279 @@
-data "azurerm_subscription" "current" {}
-
-# existing virtual network
+# existing vnet data source
 data "azurerm_virtual_network" "existing" {
-  for_each = var.use_existing_vnet ? {
-    "vnet" = var.use_existing_vnet
-  } : {}
+  for_each = lookup(var.vnet, "existing", null) != null ? { "vnet" = var.vnet.existing } : {}
 
-  name                = var.vnet.name
-  resource_group_name = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
+  name                = each.value.name
+  resource_group_name = try(each.value.resource_group, var.resource_group)
 }
 
 # virtual network
 resource "azurerm_virtual_network" "vnet" {
-  for_each = var.use_existing_vnet ? {} : {
-    "vnet" = var.use_existing_vnet
-  }
+  for_each = lookup(var.vnet, "existing", null) != null ? {} : { "vnet" = var.vnet }
 
-  name                    = var.vnet.name
-  resource_group_name     = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
-  location                = coalesce(lookup(var.vnet, "location", null), var.location)
-  address_space           = var.vnet.cidr
-  tags                    = try(var.vnet.tags, var.tags, null)
+  resource_group_name = coalesce(var.vnet.resource_group, var.resource_group)
+  location            = coalesce(var.vnet.location, var.location)
+  name                = var.vnet.name
+  address_space       = var.vnet.cidr
+
   edge_zone               = try(var.vnet.edge_zone, null)
   bgp_community           = try(var.vnet.bgp_community, null)
   flow_timeout_in_minutes = try(var.vnet.flow_timeout_in_minutes, null)
 
   dynamic "encryption" {
-    for_each = try(var.vnet.encryption_mode, null) != null ? { "default" = var.vnet.encryption_mode } : {}
-
+    for_each = lookup(var.vnet, "encryption", null) != null ? [lookup(var.vnet, "encryption", null)] : []
     content {
-      enforcement = try(var.vnet.encryption_mode, "AllowUnencrypted")
+      enforcement = encryption.value.enforcement
     }
   }
+
+  tags = try(var.vnet.tags, var.tags, {})
+
   lifecycle {
     ignore_changes = [subnet, dns_servers]
   }
 }
 
+# dns servers
 resource "azurerm_virtual_network_dns_servers" "dns" {
-  for_each = var.use_existing_vnet ? {} : {
-    "vnet" = var.use_existing_vnet
+  for_each = {
+    for k, v in {
+      "default" = lookup(var.vnet, "existing", null) != null ? try(var.vnet.existing.dns_servers, []) : try(var.vnet.dns_servers, [])
+    } : k => v
+    if length(v) > 0
   }
 
-  dns_servers        = try(var.vnet.dns_servers, [])
-  virtual_network_id = azurerm_virtual_network.vnet["vnet"].id
+  virtual_network_id = lookup(var.vnet, "existing", null) != null ? data.azurerm_virtual_network.existing["vnet"].id : azurerm_virtual_network.vnet["vnet"].id
+  dns_servers        = each.value
 }
 
 # subnets
 resource "azurerm_subnet" "subnets" {
-  for_each = length(lookup(var.vnet, "subnets", {})) > 0 ? {
-    for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => {
+  for_each = lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {}))
 
-      subnet_key                                    = subnet_key
-      virtual_network_name                          = var.vnet.name
-      address_prefixes                              = subnet.cidr
-      endpoints                                     = try(subnet.endpoints, [])
-      private_link_service_network_policies_enabled = try(subnet.private_link_service_network_policies_enabled, false)
-      private_endpoint_network_policies             = try(subnet.private_endpoint_network_policies, "Disabled")
-      default_outbound_access_enabled               = try(subnet.default_outbound_access_enabled, null)
-      service_endpoint_policy_ids                   = try(subnet.service_endpoint_policy_ids, null)
-      subnet_name                                   = try(subnet.name, join("-", [var.naming.subnet, subnet_key]))
-      tags                                          = try(subnet.nsg.tags, var.tags, null)
-      delegations = [for key, del in try(subnet.delegations, {}) : {
-        delegation_key = key
-        name           = del.name
-        actions        = try(del.actions, [])
-      }]
-    }
-  } : {}
+  name = try(
+    each.value.name, join("-", [var.naming.subnet, each.key])
+  )
 
-  name                                          = each.value.subnet_name
-  resource_group_name                           = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
-  virtual_network_name                          = var.use_existing_vnet ? data.azurerm_virtual_network.existing["vnet"].name : azurerm_virtual_network.vnet["vnet"].name
-  address_prefixes                              = each.value.address_prefixes
-  service_endpoints                             = each.value.endpoints
-  private_link_service_network_policies_enabled = each.value.private_link_service_network_policies_enabled
-  private_endpoint_network_policies             = each.value.private_endpoint_network_policies
-  service_endpoint_policy_ids                   = each.value.service_endpoint_policy_ids
-  default_outbound_access_enabled               = each.value.default_outbound_access_enabled
+  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
+    var.vnet.resource_group,
+    var.resource_group
+  )
+
+  virtual_network_name                          = lookup(var.vnet, "existing", null) != null ? data.azurerm_virtual_network.existing["vnet"].name : azurerm_virtual_network.vnet["vnet"].name
+  address_prefixes                              = each.value.cidr
+  service_endpoints                             = try(each.value.service_endpoints, [])
+  private_link_service_network_policies_enabled = try(each.value.private_link_service_network_policies_enabled, false)
+  private_endpoint_network_policies             = try(each.value.private_endpoint_network_policies, "Disabled")
+  service_endpoint_policy_ids                   = try(each.value.service_endpoint_policy_ids, [])
+  default_outbound_access_enabled               = try(each.value.default_outbound_access_enabled, null)
 
   dynamic "delegation" {
-    for_each = each.value.delegations
-
+    for_each = lookup(each.value, "delegations", {})
     content {
-      name = delegation.value.delegation_key
-
+      name = delegation.key
       service_delegation {
         name    = delegation.value.name
-        actions = delegation.value.actions
+        actions = lookup(delegation.value, "actions", [])
       }
     }
   }
 }
 
 # network security groups
-resource "azurerm_network_security_group" "nsg" {
-  for_each = {
-    for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => {
-      nsg_name = try(subnet.nsg.name, join("-", [var.naming.network_security_group, subnet_key]))
-      rules    = values(lookup(lookup(subnet, "nsg", {}), "rules", {}))
-      tags     = try(subnet.nsg.tags, var.tags, null)
-      location = coalesce(lookup(var.vnet, "location", null), var.location)
+resource "azurerm_network_security_group" "this" {
+  for_each = merge(
+    lookup(var.vnet, "existing", null) != null ? lookup(lookup(var.vnet, "existing", {}), "network_security_groups", {}) : lookup(var.vnet, "network_security_groups", {}),
+    lookup(var.vnet, "existing", null) != null ? {
+      for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", {}) : subnet_key => subnet.network_security_group
+      if lookup(subnet, "network_security_group", null) != null
+      } : {
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet.network_security_group
+      if lookup(subnet, "network_security_group", null) != null
     }
-    if lookup(subnet, "nsg", null) != null
-  }
+  )
 
-  name                = each.value.nsg_name
-  resource_group_name = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
-  location            = each.value.location
-  tags                = each.value.tags
+  name = coalesce(
+    lookup(each.value, "name", null),
+    try("${var.naming.network_security_group}-${each.key}", null)
+  )
 
-  dynamic "security_rule" {
-    for_each = each.value.rules
+  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
+    var.vnet.resource_group,
+    var.resource_group
+  )
 
-    content {
-      name                         = security_rule.value.name
-      priority                     = security_rule.value.priority
-      direction                    = security_rule.value.direction
-      access                       = security_rule.value.access
-      protocol                     = security_rule.value.protocol
-      description                  = lookup(security_rule.value, "description", null)
-      source_port_range            = lookup(security_rule.value, "source_port_range", null)
-      source_port_ranges           = lookup(security_rule.value, "source_port_ranges", null)
-      destination_port_range       = lookup(security_rule.value, "destination_port_range", null)
-      destination_port_ranges      = lookup(security_rule.value, "destination_port_ranges", null)
-      source_address_prefix        = lookup(security_rule.value, "source_address_prefix", null)
-      source_address_prefixes      = lookup(security_rule.value, "source_address_prefixes", null)
-      destination_address_prefix   = lookup(security_rule.value, "destination_address_prefix", null)
-      destination_address_prefixes = lookup(security_rule.value, "destination_address_prefixes", null)
-    }
-  }
+  location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(
+    var.vnet.location,
+    var.location
+  )
+
+  tags = try(var.vnet.tags, var.tags, {})
 }
 
-resource "azurerm_subnet_network_security_group_association" "nsg_as" {
+# security rules
+resource "azurerm_network_security_rule" "this" {
+  for_each = merge({
+    for pair in flatten([
+      for nsg_key, nsg in lookup(lookup(var.vnet, "existing", {}), "network_security_groups", lookup(var.vnet, "network_security_groups", {})) :
+      try([
+        for rule_key, rule in lookup(nsg, "rules", {}) : {
+          key = "${nsg_key}_${rule_key}"
+          value = {
+            nsg_name = azurerm_network_security_group.this[nsg_key].name
+            rule     = rule
+            rule_name = try(
+              rule.name, join("-", [var.naming.network_security_group_rule, rule_key])
+            )
+          }
+        }
+      ], [])
+    ]) : pair.key => pair.value
+    }, {
+    for pair in flatten([
+      for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) :
+      try([
+        for rule_key, rule in lookup(lookup(subnet, "network_security_group", {}), "rules", {}) : {
+          key = "${subnet_key}_${rule_key}"
+          value = {
+            nsg_name = azurerm_network_security_group.this[subnet_key].name
+            rule     = rule
+            rule_name = try(
+              rule.name, join("-", [var.naming.network_security_group_rule, rule_key])
+            )
+          }
+        }
+      ], [])
+    ]) : pair.key => pair.value
+  })
+
+  name                         = each.value.rule_name
+  priority                     = each.value.rule.priority
+  direction                    = each.value.rule.direction
+  access                       = each.value.rule.access
+  protocol                     = each.value.rule.protocol
+  source_port_range            = try(each.value.rule.source_port_range, null)
+  source_port_ranges           = try(each.value.rule.source_port_ranges, null)
+  destination_port_range       = try(each.value.rule.destination_port_range, null)
+  destination_port_ranges      = try(each.value.rule.destination_port_ranges, null)
+  source_address_prefix        = try(each.value.rule.source_address_prefix, null)
+  source_address_prefixes      = try(each.value.rule.source_address_prefixes, null)
+  destination_address_prefix   = try(each.value.rule.destination_address_prefix, null)
+  destination_address_prefixes = try(each.value.rule.destination_address_prefixes, null)
+  description                  = try(each.value.rule.description, null)
+  network_security_group_name  = each.value.nsg_name
+
+  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
+    var.vnet.resource_group,
+    var.resource_group
+  )
+}
+
+# nsg associations
+resource "azurerm_subnet_network_security_group_association" "this" {
   for_each = {
-    for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
-    if lookup(subnet, "nsg", null) != null
+    for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) : subnet_key => subnet
+    if lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null || lookup(subnet, "network_security_group", null) != null
   }
 
-  subnet_id                 = azurerm_subnet.subnets[each.key].id
-  network_security_group_id = azurerm_network_security_group.nsg[each.key].id
-
-  depends_on = [time_sleep.wait_for_subnet]
+  subnet_id = azurerm_subnet.subnets[each.key].id
+  network_security_group_id = lookup(lookup(each.value, "shared", {}), "network_security_group", null) != null ? (
+    azurerm_network_security_group.this[lookup(each.value.shared, "network_security_group")].id
+  ) : azurerm_network_security_group.this[each.key].id
 }
 
-resource "time_sleep" "wait_for_subnet" {
-  depends_on = [azurerm_subnet.subnets]
+# route tables
+resource "azurerm_route_table" "this" {
+  for_each = merge(
+    lookup(var.vnet, "existing", null) != null ? lookup(lookup(var.vnet, "existing", {}), "route_tables", {}) : lookup(var.vnet, "route_tables", {}),
+    lookup(var.vnet, "existing", null) != null ? {
+      for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", {}) : subnet_key => subnet.route_table
+      if lookup(subnet, "route_table", null) != null
+      } : {
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet.route_table
+      if lookup(subnet, "route_table", null) != null
+    }
+  )
 
-  create_duration = "1m"
-}
+  name = coalesce(
+    lookup(each.value, "name", null),
+    try("${var.naming.route_table}-${each.key}", null)
+  )
 
-# shared route tables
-resource "azurerm_route_table" "shd_rt" {
-  for_each = try(var.vnet.route_tables, {})
+  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
+    var.vnet.resource_group,
+    var.resource_group
+  )
 
-  name                          = try(each.value.name, "${var.naming.route_table}-${each.key}")
-  resource_group_name           = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
-  location                      = coalesce(lookup(var.vnet, "location", null), var.location)
+  location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(
+    var.vnet.location,
+    var.location
+  )
+
   bgp_route_propagation_enabled = try(each.value.bgp_route_propagation_enabled, true)
-  tags                          = try(each.value.tags, var.tags, null)
+  tags                          = try(var.vnet.tags, var.tags, {})
 
   lifecycle {
     ignore_changes = [route]
   }
 }
 
-resource "azurerm_route" "shared_routes" {
-  for_each = {
-    for route_item in flatten([
-      for rt_key, rt in lookup(var.vnet, "route_tables", {}) : [
-        for route_key, route_value in try(rt.routes, {}) : {
-
-          key           = "${rt_key}_${route_key}"
-          route_table   = azurerm_route_table.shd_rt[rt_key]
-          route_name    = route_key
-          route_details = route_value
+# routes
+resource "azurerm_route" "this" {
+  for_each = merge({
+    for pair in flatten([
+      for rt_key, rt in lookup(lookup(var.vnet, "existing", {}), "route_tables", lookup(var.vnet, "route_tables", {})) :
+      try([
+        for route_key, route in lookup(rt, "routes", {}) : {
+          key = "${rt_key}_${route_key}"
+          value = {
+            route_table_name = azurerm_route_table.this[rt_key].name
+            route            = route
+            route_name = try(
+              route.name, join("-", [var.naming.route, route_key])
+            )
+          }
         }
-      ]
-    ]) : route_item.key => route_item
-  }
+      ], [])
+    ]) : pair.key => pair.value
+    }, {
+    for pair in flatten([
+      for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) :
+      try([
+        for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
+          key = "${subnet_key}_${route_key}"
+          value = {
+            route_table_name = azurerm_route_table.this[subnet_key].name
+            route            = route
+            route_name = try(
+              route.name, join("-", [var.naming.route, route_key])
+            )
+          }
+        }
+      ], [])
+    ]) : pair.key => pair.value
+  })
 
   name                   = each.value.route_name
-  resource_group_name    = each.value.route_table.resource_group_name
-  route_table_name       = each.value.route_table.name
-  address_prefix         = each.value.route_details.address_prefix
-  next_hop_type          = each.value.route_details.next_hop_type
-  next_hop_in_ip_address = lookup(each.value.route_details, "next_hop_in_ip_address", null)
-}
-
-# individual route tables
-resource "azurerm_route_table" "rt" {
-  for_each = {
-    for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
-    if lookup(subnet, "route_table", null) != null
-  }
-
-  name                          = try(each.value.route_table.name, "${var.naming.route_table}-${each.key}")
-  resource_group_name           = coalesce(lookup(var.vnet, "resource_group", null), var.resource_group)
-  location                      = coalesce(lookup(var.vnet, "location", null), var.location)
-  bgp_route_propagation_enabled = try(each.value.route_table.bgp_route_propagation_enabled, true)
-  tags                          = try(each.value.route_table.tags, var.tags, null)
-
-  lifecycle {
-    ignore_changes = [route]
-  }
-}
-
-resource "azurerm_route" "routes" {
-  for_each = {
-    for route_item in flatten([
-      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : [
-        for route_key, route_value in try(subnet.route_table.routes, {}) : {
-
-          key         = "${subnet_key}_${route_key}"
-          route_table = azurerm_route_table.rt[subnet_key]
-          route_name  = route_key
-          route       = route_value
-        }
-      ]
-    ]) : route_item.key => route_item
-  }
-
-  name                   = each.value.route_name
-  resource_group_name    = each.value.route_table.resource_group_name
-  route_table_name       = each.value.route_table.name
+  route_table_name       = each.value.route_table_name
   address_prefix         = each.value.route.address_prefix
   next_hop_type          = each.value.route.next_hop_type
-  next_hop_in_ip_address = lookup(each.value.route, "next_hop_in_ip_address", null)
+  next_hop_in_ip_address = try(each.value.route.next_hop_in_ip_address, null)
+
+  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
+    var.vnet.resource_group,
+    var.resource_group
+  )
 }
 
-resource "azurerm_subnet_route_table_association" "rt_as" {
+# route table associations
+resource "azurerm_subnet_route_table_association" "this" {
   for_each = {
-    for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
-    if lookup(subnet, "route_table_shared", null) != null || lookup(subnet, "route_table", null) != null
+    for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) : subnet_key => subnet
+    if lookup(lookup(subnet, "shared", {}), "route_table", null) != null || lookup(subnet, "route_table", null) != null
   }
 
-  subnet_id      = azurerm_subnet.subnets[each.key].id
-  route_table_id = lookup(each.value, "route_table_shared", null) != null ? azurerm_route_table.shd_rt[each.value.route_table_shared].id : azurerm_route_table.rt[each.key].id
+  subnet_id = azurerm_subnet.subnets[each.key].id
+  route_table_id = lookup(lookup(each.value, "shared", {}), "route_table", null) != null ? (
+    azurerm_route_table.this[lookup(each.value.shared, "route_table")].id
+  ) : azurerm_route_table.this[each.key].id
 }

@@ -11,7 +11,7 @@ module "rg" {
 
   groups = {
     demo = {
-      name     = module.naming.resource_group.name
+      name     = module.naming.resource_group.name_unique
       location = "westeurope"
     }
   }
@@ -33,7 +33,7 @@ module "network" {
       demo = {
         cidr = ["10.18.3.0/24"]
         nsg  = {}
-        endpoints = [
+        service_endpoints = [
           "Microsoft.Storage",
           "Microsoft.Sql"
         ]

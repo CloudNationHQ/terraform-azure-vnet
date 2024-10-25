@@ -1,30 +1,21 @@
-This example highlights the utilization of service endpoints on subnets.
+# Service Endpoints
 
-## Usage
+This deploys service endpoints on a subnet
+
+## Types
 
 ```hcl
-module "network" {
-  source  = "cloudnationhq/vnet/azure"
-  version = "~> 7.0"
-
-  naming = local.naming
-
-  vnet = {
-    name          = module.naming.virtual_network.name
-    location      = module.rg.groups.demo.location
-    resourcegroup = module.rg.groups.demo.name
-    cidr          = ["10.18.0.0/16"]
-
-    subnets = {
-      demo = {
-        cidr = ["10.18.3.0/24"]
-        nsg  = {}
-        endpoints = [
-          "Microsoft.Storage",
-          "Microsoft.Sql"
-        ]
-      }
-    }
-  }
-}
+vnet = object({
+  existing = object({
+    name           = string
+    location       = string
+    resource_group = string
+    cidr           = list(string)
+    subnets = map(object({
+      cidr = list(string)
+      nsg = optional(map(string))
+      service_endpoints = optional(list(string))
+    }))
+  })
+})
 ```

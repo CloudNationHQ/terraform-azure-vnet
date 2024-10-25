@@ -11,7 +11,7 @@ module "rg" {
 
   groups = {
     demo = {
-      name     = module.naming.resource_group.name
+      name     = module.naming.resource_group.name_unique
       location = "westeurope"
     }
   }
@@ -27,20 +27,18 @@ module "network" {
     name           = module.naming.virtual_network.name
     location       = module.rg.groups.demo.location
     resource_group = module.rg.groups.demo.name
-    cidr           = ["10.18.0.0/16"]
+    cidr           = ["10.0.0.0/16"]
 
     subnets = {
       sn1 = {
-        cidr = ["10.18.1.0/24"]
-        nsg  = {}
-        endpoints = [
+        cidr = ["10.0.1.0/24"]
+        service_endpoints = [
           "Microsoft.Storage",
           "Microsoft.Sql"
         ]
       }
       sn2 = {
-        cidr = ["10.18.2.0/24"]
-        nsg  = {}
+        cidr = ["10.0.2.0/24"]
         delegations = {
           databricks = {
             name = "Microsoft.Databricks/workspaces"
@@ -53,18 +51,43 @@ module "network" {
         }
       }
       sn3 = {
-        cidr = ["10.18.3.0/24"]
-        routes = {
-          udr1 = {
-            address_prefix = "Storage"
-            next_hop_type  = "Internet"
+        cidr = ["10.0.3.0/24"]
+        route_table = {
+          routes = {
+            rt3 = {
+              address_prefix = "storage"
+              next_hop_type  = "Internet"
+            }
           }
         }
       }
       sn4 = {
-        cidr = ["10.18.4.0/24"]
-        nsg = {
-          rules = local.rules
+        cidr = ["10.0.4.0/24"]
+        network_security_group = {
+          rules = {
+            myhttps = {
+              name                       = "myhttps"
+              priority                   = 100
+              direction                  = "Inbound"
+              access                     = "Allow"
+              protocol                   = "Tcp"
+              source_port_range          = "*"
+              destination_port_range     = "443"
+              source_address_prefixes    = ["10.0.0.0/24", "11.0.0.0/24"]
+              destination_address_prefix = "*"
+            }
+            allow_http = {
+              name                       = "allow_http"
+              priority                   = 200
+              direction                  = "Inbound"
+              access                     = "Allow"
+              protocol                   = "Tcp"
+              source_port_range          = "*"
+              destination_port_range     = "80"
+              source_address_prefix      = "*"
+              destination_address_prefix = "*"
+            }
+          }
         }
       }
     }
