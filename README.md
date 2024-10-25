@@ -70,7 +70,6 @@ End-to-end testing is not conducted on these modules, as they are individual com
 | <a name="input_naming"></a> [naming](#input\_naming) | Used for naming purposes | `map(string)` | `null` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | default resource group to be used. | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to be added to the resources | `map(string)` | `{}` | no |
-| <a name="input_use_existing_vnet"></a> [use\_existing\_vnet](#input\_use\_existing\_vnet) | use existing vnets globally | `bool` | `false` | no |
 | <a name="input_vnet"></a> [vnet](#input\_vnet) | Contains all virtual network settings | `any` | n/a | yes |
 
 ## Outputs
