@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.0.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v7.0.0...v7.0.1) (2024-10-28)
+
+
+### Bug Fixes
+
+* remove parlalellism limitation from tests ([#98](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/98)) ([c969d29](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/c969d29baeab7c90c7a294c7fbc5870a1d4bc072))
+
 ## [7.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v6.1.0...v7.0.0) (2024-10-25)
 
 
