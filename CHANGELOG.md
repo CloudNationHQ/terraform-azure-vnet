@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.0.2](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v7.0.1...v7.0.2) (2024-10-31)
+
+
+### Bug Fixes
+
+* resolve type mismatch in nsg name coalesce ([#100](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/100)) ([808a2ce](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/808a2cefe972e467d815dd71c6b2e0a2e72a3c41))
+
 ## [7.0.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v7.0.0...v7.0.1) (2024-10-28)
 
 
