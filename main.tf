@@ -92,9 +92,9 @@ resource "azurerm_network_security_group" "this" {
     }
   )
 
-  name = coalesce(
-    lookup(each.value, "name", null),
-    try("${var.naming.network_security_group}-${each.key}", null)
+  name = try(
+    each.value.name,
+    "${var.naming.network_security_group}-${each.key}"
   )
 
   resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
@@ -194,9 +194,9 @@ resource "azurerm_route_table" "this" {
     }
   )
 
-  name = coalesce(
-    lookup(each.value, "name", null),
-    try("${var.naming.route_table}-${each.key}", null)
+  name = try(
+    each.value.name,
+    "${var.naming.route_table}-${each.key}"
   )
 
   resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
