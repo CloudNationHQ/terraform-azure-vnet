@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v7.0.2...v7.1.0) (2024-11-11)
+
+
+### Features
+
+* enhance testing with sequential, parallel modes and flags for exceptions and skip-destroy ([#102](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/102)) ([29c7b52](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/29c7b5241414b82962585a907c500c8fc689b3c3))
+
 ## [7.0.2](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v7.0.1...v7.0.2) (2024-10-31)
 
 
