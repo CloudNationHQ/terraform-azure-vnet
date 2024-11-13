@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.2](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.0.1...v8.0.2) (2024-11-13)
+
+
+### Bug Fixes
+
+* remove time provider ([#109](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/109)) ([2c87fcd](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/2c87fcd4e837ce3c09d6e0fd0d8e6c0e4fce6013))
+
 ## [8.0.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.0.0...v8.0.1) (2024-11-13)
 
 
