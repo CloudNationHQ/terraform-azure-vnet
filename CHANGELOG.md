@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.0.0...v8.0.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* revert several symbolic names and fixed the documentation generation of submodules ([#106](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/106)) ([e77c10e](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/e77c10e65bfeed416cc1f15f3574b79984fa6f0e))
+
 ## [8.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v7.1.0...v8.0.0) (2024-11-13)
 
 
