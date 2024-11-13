@@ -1,5 +1,16 @@
 # Changelog
 
+## [8.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v7.1.0...v8.0.0) (2024-11-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove submodule vhub-connection, added submodule vnet-peering, updated cidr properties to address_space (vnet) and address_prefixes (subnet) ([#104](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/104))
+
+### Features
+
+* remove submodule vhub-connection, added submodule vnet-peering, updated cidr properties to address_space (vnet) and address_prefixes (subnet) ([#104](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/104)) ([2e843e0](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/2e843e0846b004d3f1cbfce1beefd21b73d3bad0))
+
 ## [7.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v7.0.2...v7.1.0) (2024-11-11)
 
 
