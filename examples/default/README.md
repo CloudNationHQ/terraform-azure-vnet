@@ -9,6 +9,6 @@ vnet = object({
   name           = string
   location       = string
   resource_group = string
-  cidr           = list(string)
+  address_space  = list(string)
 })
 ```
