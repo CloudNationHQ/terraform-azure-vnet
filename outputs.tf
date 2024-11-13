@@ -1,5 +1,5 @@
 output "vnet" {
-  description = "contains frontdoor configuration"
+  description = "contains virtual network configuration"
   value       = lookup(var.vnet, "existing", null) != null ? data.azurerm_virtual_network.existing["vnet"] : azurerm_virtual_network.vnet["vnet"]
 }
 

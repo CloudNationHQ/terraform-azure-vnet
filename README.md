@@ -39,7 +39,6 @@ End-to-end testing is not conducted on these modules, as they are individual com
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.6 |
-| <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.10.0 |
 
 ## Providers
 
@@ -78,7 +77,7 @@ End-to-end testing is not conducted on these modules, as they are individual com
 |------|-------------|
 | <a name="output_network_security_group"></a> [network\_security\_group](#output\_network\_security\_group) | n/a |
 | <a name="output_subnets"></a> [subnets](#output\_subnets) | n/a |
-| <a name="output_vnet"></a> [vnet](#output\_vnet) | contains frontdoor configuration |
+| <a name="output_vnet"></a> [vnet](#output\_vnet) | contains virtual network configuration |
 <!-- END_TF_DOCS -->
 
 ## Testing
