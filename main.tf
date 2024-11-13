@@ -80,7 +80,7 @@ resource "azurerm_subnet" "subnets" {
 }
 
 # network security groups
-resource "azurerm_network_security_group" "this" {
+resource "azurerm_network_security_group" "nsg" {
   for_each = merge(
     lookup(var.vnet, "existing", null) != null ? lookup(lookup(var.vnet, "existing", {}), "network_security_groups", {}) : lookup(var.vnet, "network_security_groups", {}),
     lookup(var.vnet, "existing", null) != null ? {
@@ -111,7 +111,7 @@ resource "azurerm_network_security_group" "this" {
 }
 
 # security rules
-resource "azurerm_network_security_rule" "this" {
+resource "azurerm_network_security_rule" "rules" {
   for_each = merge({
     for pair in flatten([
       for nsg_key, nsg in lookup(lookup(var.vnet, "existing", {}), "network_security_groups", lookup(var.vnet, "network_security_groups", {})) :
@@ -119,7 +119,7 @@ resource "azurerm_network_security_rule" "this" {
         for rule_key, rule in lookup(nsg, "rules", {}) : {
           key = "${nsg_key}_${rule_key}"
           value = {
-            nsg_name = azurerm_network_security_group.this[nsg_key].name
+            nsg_name = azurerm_network_security_group.nsg[nsg_key].name
             rule     = rule
             rule_name = try(
               rule.name, join("-", [var.naming.network_security_group_rule, rule_key])
@@ -135,7 +135,7 @@ resource "azurerm_network_security_rule" "this" {
         for rule_key, rule in lookup(lookup(subnet, "network_security_group", {}), "rules", {}) : {
           key = "${subnet_key}_${rule_key}"
           value = {
-            nsg_name = azurerm_network_security_group.this[subnet_key].name
+            nsg_name = azurerm_network_security_group.nsg[subnet_key].name
             rule     = rule
             rule_name = try(
               rule.name, join("-", [var.naming.network_security_group_rule, rule_key])
@@ -169,7 +169,7 @@ resource "azurerm_network_security_rule" "this" {
 }
 
 # nsg associations
-resource "azurerm_subnet_network_security_group_association" "this" {
+resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
     for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) : subnet_key => subnet
     if lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null || lookup(subnet, "network_security_group", null) != null
@@ -177,12 +177,12 @@ resource "azurerm_subnet_network_security_group_association" "this" {
 
   subnet_id = azurerm_subnet.subnets[each.key].id
   network_security_group_id = lookup(lookup(each.value, "shared", {}), "network_security_group", null) != null ? (
-    azurerm_network_security_group.this[lookup(each.value.shared, "network_security_group")].id
-  ) : azurerm_network_security_group.this[each.key].id
+    azurerm_network_security_group.nsg[lookup(each.value.shared, "network_security_group")].id
+  ) : azurerm_network_security_group.nsg[each.key].id
 }
 
 # route tables
-resource "azurerm_route_table" "this" {
+resource "azurerm_route_table" "rt" {
   for_each = merge(
     lookup(var.vnet, "existing", null) != null ? lookup(lookup(var.vnet, "existing", {}), "route_tables", {}) : lookup(var.vnet, "route_tables", {}),
     lookup(var.vnet, "existing", null) != null ? {
@@ -218,7 +218,7 @@ resource "azurerm_route_table" "this" {
 }
 
 # routes
-resource "azurerm_route" "this" {
+resource "azurerm_route" "routes" {
   for_each = merge({
     for pair in flatten([
       for rt_key, rt in lookup(lookup(var.vnet, "existing", {}), "route_tables", lookup(var.vnet, "route_tables", {})) :
@@ -226,7 +226,7 @@ resource "azurerm_route" "this" {
         for route_key, route in lookup(rt, "routes", {}) : {
           key = "${rt_key}_${route_key}"
           value = {
-            route_table_name = azurerm_route_table.this[rt_key].name
+            route_table_name = azurerm_route_table.rt[rt_key].name
             route            = route
             route_name = try(
               route.name, join("-", [var.naming.route, route_key])
@@ -242,7 +242,7 @@ resource "azurerm_route" "this" {
         for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
           key = "${subnet_key}_${route_key}"
           value = {
-            route_table_name = azurerm_route_table.this[subnet_key].name
+            route_table_name = azurerm_route_table.rt[subnet_key].name
             route            = route
             route_name = try(
               route.name, join("-", [var.naming.route, route_key])
@@ -266,7 +266,7 @@ resource "azurerm_route" "this" {
 }
 
 # route table associations
-resource "azurerm_subnet_route_table_association" "this" {
+resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) : subnet_key => subnet
     if lookup(lookup(subnet, "shared", {}), "route_table", null) != null || lookup(subnet, "route_table", null) != null
@@ -274,6 +274,6 @@ resource "azurerm_subnet_route_table_association" "this" {
 
   subnet_id = azurerm_subnet.subnets[each.key].id
   route_table_id = lookup(lookup(each.value, "shared", {}), "route_table", null) != null ? (
-    azurerm_route_table.this[lookup(each.value.shared, "route_table")].id
-  ) : azurerm_route_table.this[each.key].id
+    azurerm_route_table.rt[lookup(each.value.shared, "route_table")].id
+  ) : azurerm_route_table.rt[each.key].id
 }
