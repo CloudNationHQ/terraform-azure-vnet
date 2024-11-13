@@ -5,7 +5,8 @@ This submodule allows for a bidirectional virtual network peering between two ne
 The `address_space` attribute within the `vnet_peering` object variable is optional and can be provided if you want the peering to automatically **resync** when changes to the address space of the remote virtual network occur. A **resync** ensures that updated routes are **propagated** between the networks, allowing traffic to flow correctly after changes, such as when a new subnet is added or an existing one is modified. If the `address_space` attribute is omitted, no automatic **resync** will be triggered upon address space changes.
 
 ## Notes
-This submodule supports virtual network peering between networks in different subscriptions. To enable this, a provider alias `(azurerm.remote)` has been configured using `configuration_aliases = [azurerm.remote]`.
+This submodule supports virtual network peering between networks in different subscriptions.  
+To enable this, a provider alias `(azurerm.remote)` has been configured using `configuration_aliases = [azurerm.remote]`.
 
 **Peering with a virtual network in another subscription**
 
@@ -26,15 +27,17 @@ provider "azurerm" {
   features {}
 }
 ```
-Peering with a Virtual Network in the Same Subscription
+**Peering with a virtual network in the same subscription**
 If the remote virtual network is in the same subscription, you can simply reference the default provider without setting up an alias:
 
-hcl
-Copy code
+```hcl
 providers = {
   azurerm.remote = azurerm
 }
-Limitations
+```
+
+**Limitations**
+
 At this time, peering across different tenants is not supported.
 
 
