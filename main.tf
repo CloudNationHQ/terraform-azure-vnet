@@ -13,7 +13,7 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = coalesce(var.vnet.resource_group, var.resource_group)
   location            = coalesce(var.vnet.location, var.location)
   name                = var.vnet.name
-  address_space       = var.vnet.cidr
+  address_space       = var.vnet.address_space
 
   edge_zone               = try(var.vnet.edge_zone, null)
   bgp_community           = try(var.vnet.bgp_community, null)
@@ -60,7 +60,7 @@ resource "azurerm_subnet" "subnets" {
   )
 
   virtual_network_name                          = lookup(var.vnet, "existing", null) != null ? data.azurerm_virtual_network.existing["vnet"].name : azurerm_virtual_network.vnet["vnet"].name
-  address_prefixes                              = each.value.cidr
+  address_prefixes                              = each.value.address_prefixes
   service_endpoints                             = try(each.value.service_endpoints, [])
   private_link_service_network_policies_enabled = try(each.value.private_link_service_network_policies_enabled, false)
   private_endpoint_network_policies             = try(each.value.private_endpoint_network_policies, "Disabled")

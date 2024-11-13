@@ -19,7 +19,7 @@ module "rg" {
 
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 7.0"
+  version = "~> 8.0"
 
   naming = local.naming
 
@@ -27,6 +27,6 @@ module "network" {
     name           = module.naming.virtual_network.name
     location       = module.rg.groups.demo.location
     resource_group = module.rg.groups.demo.name
-    cidr           = ["10.18.0.0/16"]
+    address_space  = ["10.18.0.0/16"]
   }
 }
