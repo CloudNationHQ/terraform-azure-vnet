@@ -24,7 +24,7 @@ docs:
 	for dir in modules/*; do \
 		if [ -d "$$dir" ]; then \
 			echo "Processing $$dir..."; \
-			terraform-docs markdown "$$dir" --output-file "$$dir/README.md" --output-mode inject --hide modules || echo "Skipped: $$dir"; \
+			(cd "$$dir" && terraform-docs markdown . --output-file README.md --output-mode inject --hide modules) || echo "Skipped: $$dir"; \
 		fi \
 	done
 

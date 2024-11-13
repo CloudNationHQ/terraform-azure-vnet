@@ -51,6 +51,7 @@ At this time, peering across different tenants is not supported.
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.0 |
+| <a name="provider_azurerm.remote"></a> [azurerm.remote](#provider\_azurerm.remote) | ~> 4.0 |
 
 ## Resources
 
@@ -67,5 +68,7 @@ At this time, peering across different tenants is not supported.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_vnet_peering"></a> [vnet\_peering](#output\_vnet\_peering) | contains vnet peering configuration |
 <!-- END_TF_DOCS -->
