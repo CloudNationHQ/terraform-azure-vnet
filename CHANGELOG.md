@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.3](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.0.2...v8.0.3) (2024-11-20)
+
+
+### Bug Fixes
+
+* fix inconsistent conditional result types in route tables ([#112](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/112)) ([768701f](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/768701fe4a6eff3494624662bdd12c6ebaa0d890))
+
 ## [8.0.2](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.0.1...v8.0.2) (2024-11-13)
 
 
