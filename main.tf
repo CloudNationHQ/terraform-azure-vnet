@@ -1,4 +1,4 @@
-# existing vnet data source
+# existing virtual network
 data "azurerm_virtual_network" "existing" {
   for_each = lookup(var.vnet, "existing", null) != null ? { "vnet" = var.vnet.existing } : {}
 
@@ -184,12 +184,19 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
 # route tables
 resource "azurerm_route_table" "rt" {
   for_each = merge(
-    lookup(var.vnet, "existing", null) != null ? lookup(lookup(var.vnet, "existing", {}), "route_tables", {}) : lookup(var.vnet, "route_tables", {}),
-    lookup(var.vnet, "existing", null) != null ? {
-      for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", {}) : subnet_key => subnet.route_table
+    lookup(lookup(var.vnet, "existing", {}), "route_tables", {}),
+    lookup(var.vnet, "route_tables", {}),
+    # subnet level route tables from existing virtual network
+    {
+      for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", {}) :
+      subnet_key => subnet.route_table
       if lookup(subnet, "route_table", null) != null
-      } : {
-      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet.route_table
+    },
+
+    # subnet level route tables from new virtual network
+    {
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) :
+      subnet_key => subnet.route_table
       if lookup(subnet, "route_table", null) != null
     }
   )
@@ -221,37 +228,39 @@ resource "azurerm_route_table" "rt" {
 resource "azurerm_route" "routes" {
   for_each = merge({
     for pair in flatten([
-      for rt_key, rt in lookup(lookup(var.vnet, "existing", {}), "route_tables", lookup(var.vnet, "route_tables", {})) :
-      try([
+      for rt_key, rt in merge(
+        lookup(lookup(var.vnet, "existing", {}), "route_tables", {}),
+        lookup(var.vnet, "route_tables", {})
+        ) : [
         for route_key, route in lookup(rt, "routes", {}) : {
           key = "${rt_key}_${route_key}"
           value = {
             route_table_name = azurerm_route_table.rt[rt_key].name
             route            = route
-            route_name = try(
-              route.name, join("-", [var.naming.route, route_key])
-            )
+            route_name       = try(route.name, join("-", [try(var.naming.route, "rt"), route_key]))
           }
         }
-      ], [])
+      ]
     ]) : pair.key => pair.value
-    }, {
-    for pair in flatten([
-      for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) :
-      try([
-        for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
-          key = "${subnet_key}_${route_key}"
-          value = {
-            route_table_name = azurerm_route_table.rt[subnet_key].name
-            route            = route
-            route_name = try(
-              route.name, join("-", [var.naming.route, route_key])
-            )
+    },
+    {
+      for pair in flatten([
+        for subnet_key, subnet in merge(
+          lookup(lookup(var.vnet, "existing", {}), "subnets", {}),
+          lookup(var.vnet, "subnets", {})
+          ) : [
+          for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
+            key = "${subnet_key}_${route_key}"
+            value = {
+              route_table_name = azurerm_route_table.rt[subnet_key].name
+              route            = route
+              route_name       = try(route.name, join("-", [try(var.naming.route, "rt"), route_key]))
+            }
           }
-        }
-      ], [])
-    ]) : pair.key => pair.value
-  })
+        ] if lookup(subnet, "route_table", null) != null
+      ]) : pair.key => pair.value
+    }
+  )
 
   name                   = each.value.route_name
   route_table_name       = each.value.route_table_name
@@ -268,12 +277,14 @@ resource "azurerm_route" "routes" {
 # route table associations
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
-    for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) : subnet_key => subnet
-    if lookup(lookup(subnet, "shared", {}), "route_table", null) != null || lookup(subnet, "route_table", null) != null
+    for k, v in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) : k => v
+    if lookup(v, "route_table", null) != null || lookup(lookup(v, "shared", {}), "route_table", null) != null
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
   route_table_id = lookup(lookup(each.value, "shared", {}), "route_table", null) != null ? (
-    azurerm_route_table.rt[lookup(each.value.shared, "route_table")].id
+    azurerm_route_table.rt[lookup(lookup(each.value, "shared", {}), "route_table")].id
   ) : azurerm_route_table.rt[each.key].id
+
+  depends_on = [azurerm_route_table.rt]
 }
