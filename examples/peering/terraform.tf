@@ -15,6 +15,8 @@ provider "azurerm" {
 
 provider "azurerm" {
   alias           = "remote"
-  subscription_id = "00000000-0000-0000-0000-000000000000"
+  subscription_id = data.azurerm_subscription.current.subscription_id // current subscription to succeed tests
   features {}
 }
+
+data "azurerm_subscription" "current" {}
