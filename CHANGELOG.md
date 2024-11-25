@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.0.3...v8.1.0) (2024-11-25)
+
+
+### Features
+
+* ignore inline rules in subnets and take current subscription as alias in peering usage ([#114](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/114)) ([3a4b634](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/3a4b6345190a0a15cfe5ea87c102cb16d4bfedd6))
+
 ## [8.0.3](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.0.2...v8.0.3) (2024-11-20)
 
 
