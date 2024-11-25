@@ -108,6 +108,10 @@ resource "azurerm_network_security_group" "nsg" {
   )
 
   tags = try(var.vnet.tags, var.tags, {})
+
+  lifecycle {
+    ignore_changes = [security_rule]
+  }
 }
 
 # security rules
