@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.1.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.1.0...v8.1.1) (2024-11-29)
+
+
+### Bug Fixes
+
+* resolved race condition in network security group association ([#116](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/116)) ([9dac66f](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/9dac66f30866097f932590b640beb3ccae806f79))
+
 ## [8.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.0.3...v8.1.0) (2024-11-25)
 
 
