@@ -183,6 +183,10 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   network_security_group_id = lookup(lookup(each.value, "shared", {}), "network_security_group", null) != null ? (
     azurerm_network_security_group.nsg[lookup(each.value.shared, "network_security_group")].id
   ) : azurerm_network_security_group.nsg[each.key].id
+
+  depends_on = [
+    azurerm_network_security_rule.rules
+  ]
 }
 
 # route tables
