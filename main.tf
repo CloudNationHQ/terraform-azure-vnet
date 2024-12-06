@@ -171,31 +171,16 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
     if lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null ||
-       lookup(subnet, "network_security_group", null) != null
+    lookup(subnet, "network_security_group", null) != null
   }
 
-  subnet_id = azurerm_subnet.subnets[each.key].id
+  subnet_id                 = azurerm_subnet.subnets[each.key].id
   network_security_group_id = lookup(lookup(each.value, "shared", {}), "network_security_group", null) != null ? azurerm_network_security_group.nsg[lookup(each.value.shared, "network_security_group")].id : azurerm_network_security_group.nsg[each.key].id
 
   depends_on = [
     azurerm_network_security_rule.rules
   ]
 }
-#resource "azurerm_subnet_network_security_group_association" "nsg_as" {
-  #for_each = {
-    #for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {})) : subnet_key => subnet
-    #if lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null || lookup(subnet, "network_security_group", null) != null
-  #}
-
-  #subnet_id = azurerm_subnet.subnets[each.key].id
-  #network_security_group_id = lookup(lookup(each.value, "shared", {}), "network_security_group", null) != null ? (
-    #azurerm_network_security_group.nsg[lookup(each.value.shared, "network_security_group")].id
-  #) : azurerm_network_security_group.nsg[each.key].id
-
-  #depends_on = [
-    #azurerm_network_security_rule.rules
-  #]
-#}
 
 # route tables
 resource "azurerm_route_table" "rt" {
