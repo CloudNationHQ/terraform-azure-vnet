@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.1.2](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.1.1...v8.1.2) (2024-12-06)
+
+
+### Bug Fixes
+
+* resolve type mismatches in network security groups ([#118](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/118)) ([5b43ed1](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/5b43ed15932e428913b1f935cf1bf6b840807cb5))
+
 ## [8.1.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.1.0...v8.1.1) (2024-11-29)
 
 
