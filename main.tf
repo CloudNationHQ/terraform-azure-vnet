@@ -87,12 +87,15 @@ resource "azurerm_network_security_group" "nsg" {
 
     # Handle subnet-level NSGs
     {
-      for subnet_key, subnet in lookup(var.vnet, lookup(var.vnet, "existing", null) != null ? "existing" : "", {}).subnets :
-        subnet_key => (
-          lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null ?
+      for subnet_key, subnet in (
+        lookup(var.vnet, "existing", null) != null ?
+          lookup(lookup(var.vnet, "existing", {}), "subnets", {}) :
+          lookup(var.vnet, "subnets", {})
+      ) : subnet_key => (
+        lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null ?
           lookup(lookup(var.vnet, "network_security_groups", {}), lookup(subnet.shared, "network_security_group")) :
           lookup(subnet, "network_security_group", {})
-        )
+      )
       if lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null ||
          lookup(subnet, "network_security_group", null) != null
     }
@@ -103,13 +106,9 @@ resource "azurerm_network_security_group" "nsg" {
     "${var.naming.network_security_group}-${each.key}"
   )
 
-  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
-    var.vnet.resource_group, var.resource_group
-  )
+  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(var.vnet.resource_group, var.resource_group)
 
-  location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(
-    var.vnet.location, var.location
-  )
+  location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(var.vnet.location, var.location)
 
   tags = try(var.vnet.tags, var.tags, {})
 
@@ -177,6 +176,25 @@ resource "azurerm_network_security_rule" "rules" {
 }
 
 # nsg associations
+resource "azurerm_subnet_network_security_group_association" "nsg_as" {
+  for_each = {
+    for subnet_key, subnet in (
+      lookup(var.vnet, "existing", null) != null ?
+        lookup(lookup(var.vnet, "existing", {}), "subnets", {}) :
+        lookup(var.vnet, "subnets", {})
+    ) : subnet_key => subnet
+    if lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null ||
+       lookup(subnet, "network_security_group", null) != null
+  }
+
+  subnet_id = azurerm_subnet.subnets[each.key].id
+  network_security_group_id = lookup(lookup(each.value, "shared", {}), "network_security_group", null) != null ? azurerm_network_security_group.nsg[lookup(each.value.shared, "network_security_group")].id : azurerm_network_security_group.nsg[each.key].id
+
+  depends_on = [
+    azurerm_network_security_rule.rules
+  ]
+}
+
 resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
     for subnet_key, subnet in lookup(var.vnet, lookup(var.vnet, "existing", null) != null ? "existing" : "", {}).subnets :
