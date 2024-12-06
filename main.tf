@@ -81,20 +81,26 @@ resource "azurerm_subnet" "subnets" {
 
 # network security groups
 resource "azurerm_network_security_group" "nsg" {
-  for_each = {
-    for k, v in merge(
-      # Get NSGs from top level config
-      lookup(var.vnet, "network_security_groups", {}),
-      # Get NSGs from subnet level config, handling both existing and new vnets
-      {
-        for subnet_key, subnet in lookup(var.vnet, "existing", null) != null ?
-        lookup(lookup(var.vnet, "existing", {}), "subnets", {}) :
-        lookup(var.vnet, "subnets", {}) :
-        subnet_key => subnet.network_security_group
-        if lookup(subnet, "network_security_group", null) != null
-      }
-    ) : k => v
-  }
+  for_each = merge(
+    # Handle top-level NSGs (shared ones)
+    lookup(var.vnet, "existing", null) != null ?
+    lookup(lookup(var.vnet, "existing", {}), "network_security_groups", {}) :
+    lookup(var.vnet, "network_security_groups", {}),
+
+    # Handle subnet-level NSGs (both shared references and individual ones)
+    {
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) :
+      subnet_key => (
+        # If it has shared NSG, look it up from network_security_groups
+        lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null ?
+        lookup(lookup(var.vnet, "network_security_groups", {}), lookup(subnet.shared, "network_security_group")) :
+        # Otherwise use the subnet's own NSG if it exists
+        lookup(subnet, "network_security_group", null)
+      )
+      if lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null ||
+      lookup(subnet, "network_security_group", null) != null
+    }
+  )
 
   name = try(
     each.value.name,
@@ -115,6 +121,7 @@ resource "azurerm_network_security_group" "nsg" {
     ignore_changes = [security_rule]
   }
 }
+
 #resource "azurerm_network_security_group" "nsg" {
 #for_each = merge(
 #lookup(var.vnet, "existing", null) != null ? lookup(lookup(var.vnet, "existing", {}), "network_security_groups", {}) : lookup(var.vnet, "network_security_groups", {}),
