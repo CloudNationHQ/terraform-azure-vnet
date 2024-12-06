@@ -81,16 +81,20 @@ resource "azurerm_subnet" "subnets" {
 
 # network security groups
 resource "azurerm_network_security_group" "nsg" {
-  for_each = merge(
-    lookup(var.vnet, "existing", null) != null ? lookup(lookup(var.vnet, "existing", {}), "network_security_groups", {}) : lookup(var.vnet, "network_security_groups", {}),
-    lookup(var.vnet, "existing", null) != null ? {
-      for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", {}) : subnet_key => subnet.network_security_group
-      if lookup(subnet, "network_security_group", null) != null
-      } : {
-      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet.network_security_group
-      if lookup(subnet, "network_security_group", null) != null
-    }
-  )
+  for_each = {
+    for k, v in merge(
+      # Get NSGs from top level config
+      lookup(var.vnet, "network_security_groups", {}),
+      # Get NSGs from subnet level config, handling both existing and new vnets
+      {
+        for subnet_key, subnet in lookup(var.vnet, "existing", null) != null ?
+        lookup(lookup(var.vnet, "existing", {}), "subnets", {}) :
+        lookup(var.vnet, "subnets", {}) :
+        subnet_key => subnet.network_security_group
+        if lookup(subnet, "network_security_group", null) != null
+      }
+    ) : k => v
+  }
 
   name = try(
     each.value.name,
@@ -98,13 +102,11 @@ resource "azurerm_network_security_group" "nsg" {
   )
 
   resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
-    var.vnet.resource_group,
-    var.resource_group
+    var.vnet.resource_group, var.resource_group
   )
 
   location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(
-    var.vnet.location,
-    var.location
+    var.vnet.location, var.location
   )
 
   tags = try(var.vnet.tags, var.tags, {})
@@ -113,6 +115,39 @@ resource "azurerm_network_security_group" "nsg" {
     ignore_changes = [security_rule]
   }
 }
+#resource "azurerm_network_security_group" "nsg" {
+#for_each = merge(
+#lookup(var.vnet, "existing", null) != null ? lookup(lookup(var.vnet, "existing", {}), "network_security_groups", {}) : lookup(var.vnet, "network_security_groups", {}),
+#lookup(var.vnet, "existing", null) != null ? {
+#for subnet_key, subnet in lookup(lookup(var.vnet, "existing", {}), "subnets", {}) : subnet_key => subnet.network_security_group
+#if lookup(subnet, "network_security_group", null) != null
+#} : {
+#for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet.network_security_group
+#if lookup(subnet, "network_security_group", null) != null
+#}
+#)
+
+#name = try(
+#each.value.name,
+#"${var.naming.network_security_group}-${each.key}"
+#)
+
+#resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
+#var.vnet.resource_group,
+#var.resource_group
+#)
+
+#location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(
+#var.vnet.location,
+#var.location
+#)
+
+#tags = try(var.vnet.tags, var.tags, {})
+
+#lifecycle {
+#ignore_changes = [security_rule]
+#}
+#}
 
 # security rules
 resource "azurerm_network_security_rule" "rules" {
