@@ -3,15 +3,15 @@ data "azurerm_virtual_network" "existing" {
   for_each = lookup(var.vnet, "existing", null) != null ? { "vnet" = var.vnet.existing } : {}
 
   name                = each.value.name
-  resource_group_name = try(each.value.resource_group, var.resource_group)
+  resource_group_name = coalesce(try(each.value.resource_group, null), var.resource_group)
 }
 
 # virtual network
 resource "azurerm_virtual_network" "vnet" {
   for_each = lookup(var.vnet, "existing", null) != null ? {} : { "vnet" = var.vnet }
 
-  resource_group_name = coalesce(var.vnet.resource_group, var.resource_group)
-  location            = coalesce(var.vnet.location, var.location)
+  resource_group_name = coalesce(try(var.vnet.resource_group, null), var.resource_group)
+  location            = coalesce(try(var.vnet.location, null), var.location)
   name                = var.vnet.name
   address_space       = var.vnet.address_space
 
@@ -26,7 +26,7 @@ resource "azurerm_virtual_network" "vnet" {
     }
   }
 
-  tags = try(var.vnet.tags, var.tags, {})
+  tags = try(var.vnet.tags, var.tags)
 
   lifecycle {
     ignore_changes = [subnet, dns_servers]
@@ -55,7 +55,7 @@ resource "azurerm_subnet" "subnets" {
   )
 
   resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
-    var.vnet.resource_group,
+    try(var.vnet.resource_group, null),
     var.resource_group
   )
 
@@ -97,11 +97,11 @@ resource "azurerm_network_security_group" "nsg" {
     try("${var.naming.network_security_group}-${each.key}", null)
   )
 
-  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(var.vnet.resource_group, var.resource_group)
+  resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(try(var.vnet.resource_group, null), var.resource_group)
 
-  location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(var.vnet.location, var.location)
+  location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(try(var.vnet.location, null), var.location)
 
-  tags = try(var.vnet.tags, var.tags, {})
+  tags = try(var.vnet.tags, var.tags)
 
   lifecycle {
     ignore_changes = [security_rule]
@@ -161,7 +161,7 @@ resource "azurerm_network_security_rule" "rules" {
   network_security_group_name  = each.value.nsg_name
 
   resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
-    var.vnet.resource_group,
+    try(var.vnet.resource_group, null),
     var.resource_group
   )
 }
@@ -209,12 +209,12 @@ resource "azurerm_route_table" "rt" {
   )
 
   resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
-    var.vnet.resource_group,
+    try(var.vnet.resource_group, null),
     var.resource_group
   )
 
   location = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.location : coalesce(
-    var.vnet.location,
+    try(var.vnet.location, null),
     var.location
   )
 
@@ -271,7 +271,7 @@ resource "azurerm_route" "routes" {
   next_hop_in_ip_address = try(each.value.route.next_hop_in_ip_address, null)
 
   resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
-    var.vnet.resource_group,
+    try(var.vnet.resource_group, null),
     var.resource_group
   )
 }
