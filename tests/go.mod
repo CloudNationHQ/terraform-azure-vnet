@@ -2,7 +2,7 @@ module github.com/cloudnationhq/terraform-azure-vnet
 
 go 1.23.1
 
-require github.com/gruntwork-io/terratest v0.48.0
+require github.com/gruntwork-io/terratest v0.48.1
 
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
