@@ -19,6 +19,15 @@ resource "azurerm_virtual_network" "vnet" {
   bgp_community           = try(var.vnet.bgp_community, null)
   flow_timeout_in_minutes = try(var.vnet.flow_timeout_in_minutes, null)
 
+  dynamic "ddos_protection_plan" {
+    for_each = lookup(var.vnet, "ddos_protection_plan", null) != null ? [lookup(var.vnet, "ddos_protection_plan", null)] : []
+
+    content {
+      id     = ddos_protection_plan.value.id
+      enable = try(ddos_protection_plan.value.enable, true)
+    }
+  }
+
   dynamic "encryption" {
     for_each = lookup(var.vnet, "encryption", null) != null ? [lookup(var.vnet, "encryption", null)] : []
     content {
@@ -68,9 +77,13 @@ resource "azurerm_subnet" "subnets" {
   default_outbound_access_enabled               = try(each.value.default_outbound_access_enabled, null)
 
   dynamic "delegation" {
-    for_each = lookup(each.value, "delegations", {})
+    for_each = lookup(
+      each.value, "delegations", {}
+    )
+
     content {
       name = delegation.key
+
       service_delegation {
         name    = delegation.value.name
         actions = lookup(delegation.value, "actions", [])
@@ -144,21 +157,23 @@ resource "azurerm_network_security_rule" "rules" {
     ]) : pair.key => pair.value
   })
 
-  name                         = each.value.rule_name
-  priority                     = each.value.rule.priority
-  direction                    = each.value.rule.direction
-  access                       = each.value.rule.access
-  protocol                     = each.value.rule.protocol
-  source_port_range            = try(each.value.rule.source_port_range, null)
-  source_port_ranges           = try(each.value.rule.source_port_ranges, null)
-  destination_port_range       = try(each.value.rule.destination_port_range, null)
-  destination_port_ranges      = try(each.value.rule.destination_port_ranges, null)
-  source_address_prefix        = try(each.value.rule.source_address_prefix, null)
-  source_address_prefixes      = try(each.value.rule.source_address_prefixes, null)
-  destination_address_prefix   = try(each.value.rule.destination_address_prefix, null)
-  destination_address_prefixes = try(each.value.rule.destination_address_prefixes, null)
-  description                  = try(each.value.rule.description, null)
-  network_security_group_name  = each.value.nsg_name
+  name                                       = each.value.rule_name
+  priority                                   = each.value.rule.priority
+  direction                                  = each.value.rule.direction
+  access                                     = each.value.rule.access
+  protocol                                   = each.value.rule.protocol
+  source_port_range                          = try(each.value.rule.source_port_range, null)
+  source_port_ranges                         = try(each.value.rule.source_port_ranges, null)
+  destination_port_range                     = try(each.value.rule.destination_port_range, null)
+  destination_port_ranges                    = try(each.value.rule.destination_port_ranges, null)
+  source_address_prefix                      = try(each.value.rule.source_address_prefix, null)
+  source_address_prefixes                    = try(each.value.rule.source_address_prefixes, null)
+  destination_address_prefix                 = try(each.value.rule.destination_address_prefix, null)
+  destination_address_prefixes               = try(each.value.rule.destination_address_prefixes, null)
+  description                                = try(each.value.rule.description, null)
+  network_security_group_name                = each.value.nsg_name
+  source_application_security_group_ids      = try(each.value.rule.source_application_security_group_ids, [])
+  destination_application_security_group_ids = try(each.value.rule.destination_application_security_group_ids, [])
 
   resource_group_name = lookup(var.vnet, "existing", null) != null ? var.vnet.existing.resource_group : coalesce(
     try(var.vnet.resource_group, null),
