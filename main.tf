@@ -15,9 +15,10 @@ resource "azurerm_virtual_network" "vnet" {
   name                = var.vnet.name
   address_space       = var.vnet.address_space
 
-  edge_zone               = try(var.vnet.edge_zone, null)
-  bgp_community           = try(var.vnet.bgp_community, null)
-  flow_timeout_in_minutes = try(var.vnet.flow_timeout_in_minutes, null)
+  edge_zone                      = try(var.vnet.edge_zone, null)
+  bgp_community                  = try(var.vnet.bgp_community, null)
+  flow_timeout_in_minutes        = try(var.vnet.flow_timeout_in_minutes, null)
+  private_endpoint_vnet_policies = try(var.vnet.private_endpoint_vnet_policies, null)
 
   dynamic "ddos_protection_plan" {
     for_each = lookup(var.vnet, "ddos_protection_plan", null) != null ? [lookup(var.vnet, "ddos_protection_plan", null)] : []

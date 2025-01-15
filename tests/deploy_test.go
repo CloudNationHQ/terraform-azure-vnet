@@ -95,13 +95,18 @@ func (m *Module) Apply(t *testing.T) error {
 func (m *Module) Destroy(t *testing.T) error {
 	t.Helper()
 	t.Logf("Destroying Terraform module: %s", m.Name)
-	_, err := terraform.DestroyE(t, m.Options)
-	if err != nil {
-		return fmt.Errorf("destroy failed: %v", err)
+	_, destroyErr := terraform.DestroyE(t, m.Options) // Discard stdout, capture only error
+
+	cleanupErr := m.cleanupFiles(t)
+
+	if cleanupErr != nil {
+		return fmt.Errorf("cleanup failed: %v (original destroy error: %v)", cleanupErr, destroyErr)
 	}
-	if err := m.cleanupFiles(t); err != nil {
-		return fmt.Errorf("cleanup failed: %v", err)
+
+	if destroyErr != nil {
+		return fmt.Errorf("destroy failed: %v", destroyErr)
 	}
+
 	return nil
 }
 

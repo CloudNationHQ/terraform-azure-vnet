@@ -24,12 +24,13 @@ End-to-end testing is not conducted on these modules, as they are individual com
 
 ## Features
 
-- dedicated network security group for each subnet, capable of managing multiple rules
+- optional network security group for each subnet, capable of managing multiple rules
+- association of a single network security group with multiple subnets
 - support for multiple service endpoints and delegations, including actions
 - utilization of terratest for robust validation
 - route table support with multiple user defined routes
 - association of multiple subnets with a single route table
-- optional virtual hub connections for enhanced network integration
+- optional virtual network peering for enhanced network integration
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
