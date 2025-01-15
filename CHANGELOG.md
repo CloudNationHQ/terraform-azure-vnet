@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.4.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.3.0...v8.4.0) (2025-01-15)
+
+
+### Features
+
+* added private endpoint vnet policies support and remove temporary files when deployment tests fails ([#129](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/129)) ([2311a32](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/2311a32d8f36d8cb1401a8d4e2a83a3e3bfa432f))
+
 ## [8.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.2.0...v8.3.0) (2025-01-09)
 
 
