@@ -1,0 +1,10 @@
+name: schema
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  schema-check:
+    uses: cloudnationhq/terraform-azure-workflows/.github/workflows/schema.yml@main
+    secrets: inherit
