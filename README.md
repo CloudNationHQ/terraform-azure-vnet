@@ -107,7 +107,7 @@ For more information, please see our contribution [guidelines](https://github.co
 
 MIT Licensed. See [LICENSE](https://github.com/cloudnationhq/terraform-azure-vnet/blob/main/LICENSE) for full details.
 
-## Reference
+## References
 
 - [Documentation](https://learn.microsoft.com/en-us/azure/virtual-network/)
 - [Rest Api](https://learn.microsoft.com/en-us/rest/api/virtual-network/)
