@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.4.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.4.0...v8.4.1) (2025-01-30)
+
+
+### Bug Fixes
+
+* vnet peering name override ([#132](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/132)) ([db01bd6](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/db01bd61a1bc3bcb3ff7ea1bb7cf7adb2b726b05))
+
 ## [8.4.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.3.0...v8.4.0) (2025-01-15)
 
 
