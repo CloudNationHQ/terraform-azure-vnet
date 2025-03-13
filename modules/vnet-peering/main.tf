@@ -10,6 +10,7 @@ resource "azurerm_virtual_network_peering" "local_to_remote" {
   peer_complete_virtual_networks_enabled = try(var.vnet_peering.local.peer_complete_virtual_networks_enabled, true)
   local_subnet_names                     = try(var.vnet_peering.local.subnet_names, [])
   remote_subnet_names                    = try(var.vnet_peering.remote.subnet_names, [])
+  use_remote_gateways                    = try(var.vnet_peering.local.use_remote_gateways, false)
 
   triggers = {
     remote_address_space = join(",", try(var.vnet_peering.remote.address_space, []))
@@ -28,6 +29,7 @@ resource "azurerm_virtual_network_peering" "remote_to_local" {
   peer_complete_virtual_networks_enabled = try(var.vnet_peering.remote.peer_complete_virtual_networks_enabled, true)
   local_subnet_names                     = try(var.vnet_peering.remote.subnet_names, [])
   remote_subnet_names                    = try(var.vnet_peering.local.subnet_names, [])
+  use_remote_gateways                    = try(var.vnet_peering.remote.use_remote_gateways, false)
 
   triggers = {
     remote_address_space = join(",", try(var.vnet_peering.local.address_space, []))
