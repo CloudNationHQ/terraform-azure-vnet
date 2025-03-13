@@ -1,5 +1,13 @@
 # Changelog
 
+## [8.5.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.4.1...v8.5.0) (2025-03-13)
+
+
+### Features
+
+* add support for use remote gateways in peering and removed the random provider ([#141](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/141)) ([23a2121](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/23a21217ae4266ddb6b944c2247bb87b8c4cb0db))
+* **deps:** bump golang.org/x/net from 0.33.0 to 0.36.0 in /tests ([#140](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/140)) ([55a832f](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/55a832ff765f45ab175efbb9883f089a6e57a1d6))
+
 ## [8.4.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.4.0...v8.4.1) (2025-01-30)
 
 
