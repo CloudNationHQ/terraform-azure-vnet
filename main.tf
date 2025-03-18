@@ -56,6 +56,7 @@ resource "azurerm_virtual_network_dns_servers" "dns" {
   dns_servers        = each.value
 }
 
+
 # subnets
 resource "azurerm_subnet" "subnets" {
   for_each = lookup(lookup(var.vnet, "existing", {}), "subnets", lookup(var.vnet, "subnets", {}))
