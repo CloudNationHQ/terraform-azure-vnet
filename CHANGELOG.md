@@ -10,6 +10,15 @@
 ### Features
 
 * small refactor ([#148](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/148)) ([f41cfee](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/f41cfee39502a094f2d598979555a9b482c8e5f7))
+* type definitions are added
+* documentation is updated
+* some logic is simplified regarding existing virtual network
+
+### Upgrade from v8.5.0 to v9.0.0:
+
+- Update module reference to: `version = "~> 9.0"`
+- The property and variable resource_group is renamed to resource_group_name
+- The fallback peering names are changed in the submodule peering
 
 ## [8.5.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.4.1...v8.5.0) (2025-03-13)
 
