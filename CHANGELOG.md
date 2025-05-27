@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.5.0...v9.0.0) (2025-05-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* The data structure changed, causing a recreate on existing resources.
+
+### Features
+
+* small refactor ([#148](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/148)) ([f41cfee](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/f41cfee39502a094f2d598979555a9b482c8e5f7))
+
 ## [8.5.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.4.1...v8.5.0) (2025-03-13)
 
 
