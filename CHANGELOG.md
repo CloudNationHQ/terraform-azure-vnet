@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.0.0...v9.1.0) (2025-05-27)
+
+
+### Features
+
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#147](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/147)) ([3617092](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/36170923ee91c07d0e2555fcb4118a217a8c32c6))
+
 ## [9.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v8.5.0...v9.0.0) (2025-05-27)
 
 
