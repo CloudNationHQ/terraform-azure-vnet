@@ -1,6 +1,6 @@
 module "naming" {
   source  = "cloudnationhq/naming/azure"
-  version = "~> 0.22"
+  version = "~> 0.24"
 
   suffix = ["demo", "dev"]
 }
@@ -36,21 +36,21 @@ module "rg_remote" {
 
 module "vnet_local" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 8.0"
+  version = "~> 9.0"
 
   naming = local.naming
 
   vnet = {
-    name           = "${module.naming.virtual_network.name}-hub"
-    location       = module.rg.groups.demo.location
-    resource_group = module.rg.groups.demo.name
-    address_space  = ["10.0.0.0/16"]
+    name                = "${module.naming.virtual_network.name}-hub"
+    location            = module.rg.groups.demo.location
+    resource_group_name = module.rg.groups.demo.name
+    address_space       = ["10.0.0.0/16"]
   }
 }
 
 module "vnet_remote" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 8.0"
+  version = "~> 9.0"
 
   naming = local.naming
 
@@ -59,16 +59,16 @@ module "vnet_remote" {
   }
 
   vnet = {
-    name           = "${module.naming.virtual_network.name}-spoke"
-    location       = module.rg_remote.groups.demo.location
-    resource_group = module.rg_remote.groups.demo.name
-    address_space  = ["10.1.0.0/16"]
+    name                = "${module.naming.virtual_network.name}-spoke"
+    location            = module.rg_remote.groups.demo.location
+    resource_group_name = module.rg_remote.groups.demo.name
+    address_space       = ["10.1.0.0/16"]
   }
 }
 
 module "peering" {
   source  = "cloudnationhq/vnet/azure//modules/vnet-peering"
-  version = "~> 8.0"
+  version = "~> 9.0"
 
   providers = {
     azurerm.remote = azurerm.remote
