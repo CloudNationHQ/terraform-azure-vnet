@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.1.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.1.0...v9.1.1) (2025-05-28)
+
+
+### Bug Fixes
+
+* increment usage module versions ([#151](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/151)) ([88b8f5a](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/88b8f5a1233c549370e771ee84ee8a50053a913b))
+
 ## [9.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.0.0...v9.1.0) (2025-05-27)
 
 
