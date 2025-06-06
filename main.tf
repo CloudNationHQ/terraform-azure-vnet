@@ -247,6 +247,43 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   ]
 }
 
+// Logic for setting up default routes
+// and allowing overwriting default routes
+locals {
+  default_route_table = var.vnet.use_default_route ? {
+    default = {
+      name = join("-", [try(var.naming.route_table, "rt"), "default"])
+      routes = {
+        for route in flatten([
+          for src_name, src_subnet in lookup(var.vnet, "subnets", {}) : [
+            for dst_name, dst_subnet in lookup(var.vnet, "subnets", {}) : [
+              for dst_prefix in dst_subnet.address_prefixes : {
+                key = "${src_name}-to-${dst_name}-${replace(dst_prefix, "/", "-")}"
+                value = {
+                  source      = src_name
+                  destination = dst_name
+                  prefix      = dst_prefix
+                }
+              }
+            ]
+          ]
+        ]) :
+        route.key => {
+          address_prefix         = route.value.prefix
+          next_hop_type          = "VirtualAppliance"
+          next_hop_in_ip_address = var.vnet.default_next_hop
+        }
+        if(
+          route.value.source != route.value.destination &&
+          !(contains(lookup(var.vnet.use_direct_route, route.value.source, []), route.value.destination)) &&
+          !(contains(lookup(var.vnet.use_direct_route, route.value.destination, []), route.value.source))
+        )
+      }
+    }
+  } : {}
+}
+
+
 # route tables
 resource "azurerm_route_table" "rt" {
   for_each = merge(
@@ -256,7 +293,8 @@ resource "azurerm_route_table" "rt" {
       for subnet_key, subnet in try(var.vnet.subnets, {}) :
       subnet_key => subnet.route_table
       if lookup(subnet, "route_table", null) != null
-    }
+    },
+    local.default_route_table
   )
 
   name = coalesce(
@@ -321,6 +359,22 @@ resource "azurerm_route" "routes" {
             }
           }
         ] if lookup(subnet, "route_table", null) != null
+      ]) : pair.key => pair.value
+    },
+    {
+      for pair in flatten([
+        for rt_key, rt in local.default_route_table : [
+          for route_key, route in lookup(rt, "routes", {}) : {
+            key = "${rt_key}_${route_key}"
+            value = {
+              route_table_name = azurerm_route_table.rt[rt_key].name
+              route            = route
+              route_name = coalesce(
+                route.name, join("-", [try(var.naming.route, "rt"), route_key])
+              )
+            }
+          }
+        ]
       ]) : pair.key => pair.value
     }
   )
