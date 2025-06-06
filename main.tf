@@ -369,9 +369,7 @@ resource "azurerm_route" "routes" {
             value = {
               route_table_name = azurerm_route_table.rt[rt_key].name
               route            = route
-              route_name = coalesce(
-                route.name, join("-", [try(var.naming.route, "rt"), route_key])
-              )
+              route_name       = join("-", [try(var.naming.route, "rt"), route_key])
             }
           }
         ]
