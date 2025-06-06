@@ -6,6 +6,9 @@ variable "vnet" {
     resource_group_name            = optional(string)
     location                       = optional(string)
     use_existing_vnet              = optional(bool, false)
+    use_default_route              = optional(bool, false)
+    default_next_hop               = optional(string)
+    use_direct_route               = optional(map(list(string)), {})
     edge_zone                      = optional(string)
     bgp_community                  = optional(string)
     flow_timeout_in_minutes        = optional(number)
@@ -107,6 +110,21 @@ variable "vnet" {
   validation {
     condition     = var.vnet.resource_group_name != null || var.resource_group_name != null
     error_message = "resource group name must be provided either in the vnet object or as a separate variable."
+  }
+
+  validation {
+    condition     = !var.vnet.use_default_route || (var.vnet.default_next_hop != null && var.vnet.default_next_hop != "")
+    error_message = "default_next_hop must be provided when use_default_route is true."
+  }
+
+  validation {
+    condition     = alltrue([for k, v in var.vnet.use_direct_route : alltrue([for d in v : d != k])])
+    error_message = "No exclusion can reference itself."
+  }
+
+  validation {
+    condition     = alltrue([for v in values(var.vnet.use_direct_route) : length(v) == length(distinct(v))])
+    error_message = "Exclusions can not contain duplicate subnet entries."
   }
 }
 
