@@ -43,11 +43,13 @@ module "network" {
     location            = module.rg.groups.demo.location
     resource_group_name = module.rg.groups.demo.name
     address_space       = ["10.18.0.0/16"]
-    use_default_route   = true
-    default_next_hop    = module.public_ip.configs.pub1.ip_address // e.g. a network virtual appliance
-
-    use_direct_route = {
-      sn1 = ["sn2"]
+    default_route = {
+      name     = "dr1" // `default` by default
+      enable   = true
+      next_hop = module.public_ip.configs.pub1.ip_address // e.g. a network virtual appliance
+      direct_route = {
+        sn1 = ["sn2"]
+      }
     }
 
     subnets = {
