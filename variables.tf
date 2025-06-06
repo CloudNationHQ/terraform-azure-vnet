@@ -16,7 +16,7 @@ variable "vnet" {
       name         = optional(string)
       enable       = optional(bool, false)
       next_hop     = string
-      direct_route = optional(map(list(string)), {})
+      direct_route = optional(map(list(string), {}))
     }))
     ddos_protection_plan = optional(object({
       id     = string
@@ -116,12 +116,12 @@ variable "vnet" {
   }
 
   validation {
-    condition     = alltrue([for k, v in var.vnet.default_route.direct_route : alltrue([for d in v : d != k])])
+    condition     = try(var.vnet.default_route.enable, false) != true || alltrue([for k, v in try(var.vnet.default_route.direct_route, {}) : alltrue([for d in v : d != k])])
     error_message = "No exclusion can reference itself."
   }
 
   validation {
-    condition     = alltrue([for v in values(var.vnet.default_route.direct_route) : length(v) == length(distinct(v))])
+    condition     = try(var.vnet.default_route.enable, false) != true || alltrue([for v in values(try(var.vnet.default_route.direct_route, {})) : length(v) == length(distinct(v))])
     error_message = "Exclusions can not contain duplicate subnet entries."
   }
 }
