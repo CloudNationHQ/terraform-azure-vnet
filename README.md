@@ -67,15 +67,18 @@ object({
     resource_group_name            = optional(string)
     location                       = optional(string)
     use_existing_vnet              = optional(bool, false)
-    use_default_route              = optional(bool, false)
-    default_next_hop               = optional(string)
-    use_direct_route               = optional(map(list(string)), {})
     edge_zone                      = optional(string)
     bgp_community                  = optional(string)
     flow_timeout_in_minutes        = optional(number)
     private_endpoint_vnet_policies = optional(string)
     dns_servers                    = optional(list(string), [])
     tags                           = optional(map(string))
+    default_route = optional(object({
+      name         = optional(string)
+      enable       = optional(bool, false)
+      next_hop     = string
+      direct_route = optional(map(list(string), {}))
+    }))
     ddos_protection_plan = optional(object({
       id     = string
       enable = optional(bool, true)
