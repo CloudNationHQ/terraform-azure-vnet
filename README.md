@@ -73,6 +73,12 @@ object({
     private_endpoint_vnet_policies = optional(string)
     dns_servers                    = optional(list(string), [])
     tags                           = optional(map(string))
+    default_route = optional(object({
+      name         = optional(string)
+      enable       = optional(bool, false)
+      next_hop     = string
+      direct_route = optional(map(list(string), {}))
+    }))
     ddos_protection_plan = optional(object({
       id     = string
       enable = optional(bool, true)

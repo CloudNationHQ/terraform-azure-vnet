@@ -12,6 +12,12 @@ variable "vnet" {
     private_endpoint_vnet_policies = optional(string)
     dns_servers                    = optional(list(string), [])
     tags                           = optional(map(string))
+    default_route = optional(object({
+      name         = optional(string)
+      enable       = optional(bool, false)
+      next_hop     = string
+      direct_route = optional(map(list(string), {}))
+    }))
     ddos_protection_plan = optional(object({
       id     = string
       enable = optional(bool, true)
@@ -107,6 +113,16 @@ variable "vnet" {
   validation {
     condition     = var.vnet.resource_group_name != null || var.resource_group_name != null
     error_message = "resource group name must be provided either in the vnet object or as a separate variable."
+  }
+
+  validation {
+    condition     = try(var.vnet.default_route.enable, false) != true || alltrue([for k, v in try(var.vnet.default_route.direct_route, {}) : alltrue([for d in v : d != k])])
+    error_message = "No exclusion can reference itself."
+  }
+
+  validation {
+    condition     = try(var.vnet.default_route.enable, false) != true || alltrue([for v in values(try(var.vnet.default_route.direct_route, {})) : length(v) == length(distinct(v))])
+    error_message = "Exclusions can not contain duplicate subnet entries."
   }
 }
 
