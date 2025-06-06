@@ -6,15 +6,18 @@ variable "vnet" {
     resource_group_name            = optional(string)
     location                       = optional(string)
     use_existing_vnet              = optional(bool, false)
-    use_default_route              = optional(bool, false)
-    default_next_hop               = optional(string)
-    use_direct_route               = optional(map(list(string)), {})
     edge_zone                      = optional(string)
     bgp_community                  = optional(string)
     flow_timeout_in_minutes        = optional(number)
     private_endpoint_vnet_policies = optional(string)
     dns_servers                    = optional(list(string), [])
     tags                           = optional(map(string))
+    default_route = optional(object({
+      name         = optional(string)
+      enable       = optional(bool, false)
+      next_hop     = string
+      direct_route = optional(map(list(string)), {})
+    }))
     ddos_protection_plan = optional(object({
       id     = string
       enable = optional(bool, true)
@@ -113,17 +116,12 @@ variable "vnet" {
   }
 
   validation {
-    condition     = !var.vnet.use_default_route || (var.vnet.default_next_hop != null && var.vnet.default_next_hop != "")
-    error_message = "default_next_hop must be provided when use_default_route is true."
-  }
-
-  validation {
-    condition     = alltrue([for k, v in var.vnet.use_direct_route : alltrue([for d in v : d != k])])
+    condition     = alltrue([for k, v in var.vnet.default_route.direct_route : alltrue([for d in v : d != k])])
     error_message = "No exclusion can reference itself."
   }
 
   validation {
-    condition     = alltrue([for v in values(var.vnet.use_direct_route) : length(v) == length(distinct(v))])
+    condition     = alltrue([for v in values(var.vnet.default_route.direct_route) : length(v) == length(distinct(v))])
     error_message = "Exclusions can not contain duplicate subnet entries."
   }
 }

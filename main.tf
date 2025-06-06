@@ -250,9 +250,12 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
 // Logic for setting up default routes
 // and allowing overwriting default routes
 locals {
-  default_route_table = var.vnet.use_default_route ? {
+  default_route_table = try(var.vnet.default_route.enable, false) ? {
     default = {
-      name = join("-", [try(var.naming.route_table, "rt"), "default"])
+      name = coalesce(
+        var.vnet.default_route.rt_name, join("-", [try(var.naming.route_table, "rt"), "default"]
+        )
+      )
       routes = {
         for route in flatten([
           for src_name, src_subnet in lookup(var.vnet, "subnets", {}) : [
