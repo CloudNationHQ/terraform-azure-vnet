@@ -253,7 +253,7 @@ locals {
   default_route_table = try(var.vnet.default_route.enable, false) ? {
     default = {
       name = coalesce(
-        var.vnet.default_route.rt_name, join("-", [try(var.naming.route_table, "rt"), "default"]
+        var.vnet.default_route.name, join("-", [try(var.naming.route_table, "rt"), "default"]
         )
       )
       routes = {
@@ -274,12 +274,12 @@ locals {
         route.key => {
           address_prefix         = route.value.prefix
           next_hop_type          = "VirtualAppliance"
-          next_hop_in_ip_address = var.vnet.default_next_hop
+          next_hop_in_ip_address = var.vnet.default_route.next_hop
         }
         if(
           route.value.source != route.value.destination &&
-          !(contains(lookup(var.vnet.use_direct_route, route.value.source, []), route.value.destination)) &&
-          !(contains(lookup(var.vnet.use_direct_route, route.value.destination, []), route.value.source))
+          !(contains(lookup(var.vnet.default_route.direct_route, route.value.source, []), route.value.destination)) &&
+          !(contains(lookup(var.vnet.default_route.direct_route, route.value.destination, []), route.value.source))
         )
       }
     }
