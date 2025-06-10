@@ -13,10 +13,11 @@ variable "vnet" {
     dns_servers                    = optional(list(string), [])
     tags                           = optional(map(string))
     default_route = optional(object({
-      name         = optional(string)
-      enable       = optional(bool, false)
-      next_hop     = string
-      direct_route = optional(map(list(string)), {})
+      name          = optional(string)
+      enable        = optional(bool, false)
+      next_hop_type = optional(string, "VirtualAppliance")
+      next_hop      = string
+      direct_route  = optional(map(list(string)), {})
     }))
     ddos_protection_plan = optional(object({
       id     = string

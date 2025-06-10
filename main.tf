@@ -249,41 +249,62 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
 
 // Logic for setting up default routes
 // and allowing overwriting default routes
+// Creates one routing table per subnet
+
 locals {
-  default_route_table = try(var.vnet.default_route.enable, false) ? {
-    default = {
-      name = coalesce(
-        var.vnet.default_route.name, join("-", [try(var.naming.route_table, "rt"), "default"]
-        )
-      )
-      routes = {
-        for route in flatten([
-          for src_name, src_subnet in lookup(var.vnet, "subnets", {}) : [
-            for dst_name, dst_subnet in lookup(var.vnet, "subnets", {}) : [
-              for dst_prefix in dst_subnet.address_prefixes : {
-                key = "${src_name}-to-${dst_name}-${replace(dst_prefix, "/", "-")}"
-                value = {
-                  source      = src_name
-                  destination = dst_name
-                  prefix      = dst_prefix
-                }
+  default_route_table = try(var.vnet.default_route.enable, false) ? tomap({
+    for src_subnet_key, src_subnet in try(var.vnet.subnets, {}) :
+    src_subnet_key => {
+      name = join("-", [
+        coalesce(try(var.vnet.default_route.name, null), try(var.naming.route_table, "rt")),
+        src_subnet_key
+      ]),
+      routes = merge(
+        {
+          "default" = {
+            name = coalesce(
+              var.vnet.default_route.name, join("-", [try(var.naming.route_table, "rt"), "default"]
+              )
+            )
+            address_prefix         = "0.0.0.0/0"
+            next_hop_type          = var.vnet.default_route.next_hop_type
+            next_hop_in_ip_address = var.vnet.default_route.next_hop
+          }
+        },
+        merge(flatten([
+          for dst_subnet_key, dst_subnet in try(var.vnet.subnets, {}) : [
+            for dst_prefix in dst_subnet.address_prefixes : {
+              "default-${src_subnet_key}-${dst_subnet_key}" = {
+                name = join("-", [
+                  coalesce(try(var.naming.route, "default")),
+                  dst_subnet_key
+                ]),
+                address_prefix         = dst_prefix
+                next_hop_type          = var.vnet.default_route.next_hop_type
+                next_hop_in_ip_address = var.vnet.default_route.next_hop
               }
-            ]
+            }
           ]
-        ]) :
-        route.key => {
-          address_prefix         = route.value.prefix
-          next_hop_type          = "VirtualAppliance"
-          next_hop_in_ip_address = var.vnet.default_route.next_hop
-        }
-        if(
-          route.value.source != route.value.destination &&
-          !(contains(lookup(var.vnet.default_route.direct_route, route.value.source, []), route.value.destination)) &&
-          !(contains(lookup(var.vnet.default_route.direct_route, route.value.destination, []), route.value.source))
-        )
-      }
+          if !contains(try(var.vnet.default_route.direct_route[src_subnet_key], []), dst_subnet_key) && src_subnet_key != dst_subnet_key
+        ])...),
+        merge(flatten([
+          for dst_subnet_key, dst_subnet in try(var.vnet.subnets, {}) : [
+            for dst_prefix in dst_subnet.address_prefixes : {
+              "direct-${src_subnet_key}-${dst_subnet_key}" = {
+                name = join("-", [
+                  coalesce(try(var.naming.route, "direct")),
+                  dst_subnet_key
+                ]),
+                address_prefix = dst_prefix
+                next_hop_type  = "VnetLocal"
+              }
+            }
+          ]
+          if contains(try(var.vnet.default_route.direct_route[src_subnet_key], []), dst_subnet_key)
+        ])...)
+      )
     }
-  } : {}
+  }) : {}
 }
 
 
@@ -384,7 +405,7 @@ resource "azurerm_route" "routes" {
   route_table_name       = each.value.route_table_name
   address_prefix         = each.value.route.address_prefix
   next_hop_type          = each.value.route.next_hop_type
-  next_hop_in_ip_address = each.value.route.next_hop_in_ip_address
+  next_hop_in_ip_address = lookup(each.value.route, "next_hop_in_ip_address", null)
 
   resource_group_name = coalesce(
     lookup(
@@ -397,13 +418,21 @@ resource "azurerm_route" "routes" {
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for k, v in try(var.vnet.subnets, {}) : k => v
-    if lookup(v, "route_table", null) != null || lookup(lookup(v, "shared", {}), "route_table", null) != null
+    if(
+      // Associate explicity defined routing tables
+      lookup(v, "route_table", null) != null ||
+      lookup(lookup(v, "shared", {}), "route_table", null) != null ||
+      // OR the default routing table, if enabled
+      try(var.vnet.default_route.enable, false)
+    )
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
-  route_table_id = lookup(lookup(each.value, "shared", {}), "route_table", null) != null ? (
-    azurerm_route_table.rt[lookup(lookup(each.value, "shared", {}), "route_table")].id
-  ) : azurerm_route_table.rt[each.key].id
+
+  route_table_id = coalesce(
+    try(azurerm_route_table.rt[lookup(lookup(each.value, "shared", {}), "route_table", null)].id, null),
+    try(azurerm_route_table.rt[each.key].id, null)
+  )
 
   depends_on = [azurerm_route_table.rt]
 }
