@@ -16,7 +16,7 @@ variable "vnet" {
       name         = optional(string)
       enable       = optional(bool, false)
       next_hop     = string
-      direct_route = optional(map(list(string), {}))
+      direct_route = optional(map(list(string)), {})
     }))
     ddos_protection_plan = optional(object({
       id     = string
