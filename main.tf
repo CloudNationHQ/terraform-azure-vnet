@@ -30,7 +30,7 @@ resource "azurerm_virtual_network" "vnet" {
     ), var.location
   )
 
-  name                           = var.vnet.name
+  name          = var.vnet.name
   address_space = try(var.vnet.address_space, null)
   dynamic "ip_address_pool" {
     for_each = try(var.vnet.address_space, null) == null && try(var.vnet.ip_address_pool, null) != null ? [var.vnet.ip_address_pool] : []
