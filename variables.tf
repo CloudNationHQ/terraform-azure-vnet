@@ -138,7 +138,7 @@ variable "vnet" {
   }
 
   validation {
-    condition = alltrue(flatten([
+    condition = var.vnet.address_space == null ? true : alltrue(flatten([
       for subnet in values(var.vnet.subnets) : [
         for prefix in subnet.address_prefixes :
         can(cidrhost(prefix, 0)) &&
