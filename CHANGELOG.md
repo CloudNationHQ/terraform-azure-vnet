@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.2.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.2.0...v9.2.1) (2025-06-12)
+
+
+### Bug Fixes
+
+* ensure correct go test functions are included in makefile and added more validations ([#157](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/157)) ([4e61b79](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/4e61b79357b09599b6070c9b196a70547d74a041))
+
 ## [9.2.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.1.1...v9.2.0) (2025-06-12)
 
 
