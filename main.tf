@@ -31,15 +31,17 @@ resource "azurerm_virtual_network" "vnet" {
   )
 
   name          = var.vnet.name
-  address_space = try(var.vnet.address_space, null)
+  address_space = var.vnet.address_space
+
   dynamic "ip_address_pool" {
-    for_each = try(var.vnet.address_space, null) == null && try(var.vnet.ip_address_pool, null) != null ? [var.vnet.ip_address_pool] : []
+    for_each = var.vnet.address_space == null && var.vnet.ip_address_pool != null ? [var.vnet.ip_address_pool] : []
 
     content {
       id                     = ip_address_pool.value.id
       number_of_ip_addresses = ip_address_pool.value.number_of_ip_addresses
     }
   }
+
   edge_zone                      = var.vnet.edge_zone
   bgp_community                  = var.vnet.bgp_community
   flow_timeout_in_minutes        = var.vnet.flow_timeout_in_minutes

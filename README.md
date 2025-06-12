@@ -62,8 +62,8 @@ Type:
 
 ```hcl
 object({
-    name                           = string
-    address_space                  = optional(list(string))
+    name          = string
+    address_space = optional(list(string))
     ip_address_pool = optional(object({
       id                     = string
       number_of_ip_addresses = number
