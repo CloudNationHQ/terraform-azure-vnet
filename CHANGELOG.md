@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.2.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.1.1...v9.2.0) (2025-06-12)
+
+
+### Features
+
+* added support for ip address pools ([#155](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/155)) ([c6658f7](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/c6658f7a61d8862da94c4740414d9ff3306619e1))
+
 ## [9.1.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.1.0...v9.1.1) (2025-05-28)
 
 
