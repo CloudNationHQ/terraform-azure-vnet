@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.2.2](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.2.1...v9.2.2) (2025-06-12)
+
+
+### Bug Fixes
+
+* skip cidr validation when using ip pools ([#159](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/159)) ([85df981](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/85df9818fd8e167a2f4e4907b345cd5d5ea665fc))
+
 ## [9.2.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.2.0...v9.2.1) (2025-06-12)
 
 
