@@ -69,7 +69,7 @@ resource "azurerm_virtual_network" "vnet" {
   )
 
   lifecycle {
-    ignore_changes = [subnet, dns_servers]
+    ignore_changes = [address_space, subnet, dns_servers]
   }
 }
 
