@@ -189,7 +189,7 @@ resource "azurerm_network_security_rule" "rules" {
             nsg_name = azurerm_network_security_group.nsg[nsg_key].name
             rule     = rule
             rule_name = coalesce(
-              rule.name, join("-", [var.naming.network_security_group_rule, rule_key])
+              rule.name, try(join("-", [var.naming.network_security_group_rule, rule_key]), rule_key)
             )
           }
         }
@@ -205,7 +205,7 @@ resource "azurerm_network_security_rule" "rules" {
             nsg_name = azurerm_network_security_group.nsg[subnet_key].name
             rule     = rule
             rule_name = coalesce(
-              rule.name, join("-", [var.naming.network_security_group_rule, rule_key])
+              rule.name, try(join("-", [var.naming.network_security_group_rule, rule_key]), rule_key)
             )
           }
         }
