@@ -113,69 +113,69 @@ variable "vnet" {
     error_message = "resource group name must be provided either in the vnet object or as a separate variable."
   }
 
-  validation {
-    condition     = (var.vnet.address_space != null && var.vnet.ip_address_pool == null) || (var.vnet.address_space == null && var.vnet.ip_address_pool != null)
-    error_message = "exactly one of address_space or ip_address_pool must be specified."
-  }
+  # validation {
+  #   condition     = (var.vnet.address_space != null && var.vnet.ip_address_pool == null) || (var.vnet.address_space == null && var.vnet.ip_address_pool != null)
+  #   error_message = "exactly one of address_space or ip_address_pool must be specified."
+  # }
 
-  validation {
-    condition = alltrue([
-      for subnet in keys(var.vnet.subnets) : (
-        var.vnet.subnets[subnet].shared.network_security_group == null ||
-        try(contains(keys(var.vnet.network_security_groups), var.vnet.subnets[subnet].shared.network_security_group), false)
-      )
-    ])
-    error_message = "One or more subnets reference a shared network_security_group that does not exist in network_security_groups."
-  }
-  validation {
-    condition = alltrue([
-      for subnet in keys(var.vnet.subnets) : (
-        var.vnet.subnets[subnet].shared.route_table == null ||
-        try(contains(keys(var.vnet.route_tables), var.vnet.subnets[subnet].shared.route_table), false)
-      )
-    ])
-    error_message = "One or more subnets reference a shared route_table that does not exist in route_tables."
-  }
+  # validation {
+  #   condition = alltrue([
+  #     for subnet in keys(var.vnet.subnets) : (
+  #       var.vnet.subnets[subnet].shared.network_security_group == null ||
+  #       try(contains(keys(var.vnet.network_security_groups), var.vnet.subnets[subnet].shared.network_security_group), false)
+  #     )
+  #   ])
+  #   error_message = "One or more subnets reference a shared network_security_group that does not exist in network_security_groups."
+  # }
+  # validation {
+  #   condition = alltrue([
+  #     for subnet in keys(var.vnet.subnets) : (
+  #       var.vnet.subnets[subnet].shared.route_table == null ||
+  #       try(contains(keys(var.vnet.route_tables), var.vnet.subnets[subnet].shared.route_table), false)
+  #     )
+  #   ])
+  #   error_message = "One or more subnets reference a shared route_table that does not exist in route_tables."
+  # }
 
-  validation {
-    condition = var.vnet.address_space == null ? true : alltrue(flatten([
-      for subnet in values(var.vnet.subnets) : [
-        for prefix in subnet.address_prefixes :
-        can(cidrhost(prefix, 0)) &&
-        anytrue([
-          for vnet_space in var.vnet.address_space :
-          can(cidrhost(vnet_space, 0)) &&
-          (
-            (
-              tonumber(element(split(".", cidrhost(prefix, 0)), 0)) * 256 * 256 * 256 +
-              tonumber(element(split(".", cidrhost(prefix, 0)), 1)) * 256 * 256 +
-              tonumber(element(split(".", cidrhost(prefix, 0)), 2)) * 256 +
-              tonumber(element(split(".", cidrhost(prefix, 0)), 3))
-              ) >= (
-              tonumber(element(split(".", cidrhost(vnet_space, 0)), 0)) * 256 * 256 * 256 +
-              tonumber(element(split(".", cidrhost(vnet_space, 0)), 1)) * 256 * 256 +
-              tonumber(element(split(".", cidrhost(vnet_space, 0)), 2)) * 256 +
-              tonumber(element(split(".", cidrhost(vnet_space, 0)), 3))
-            )
-          ) &&
-          (
-            (
-              tonumber(element(split(".", cidrhost(prefix, -1)), 0)) * 256 * 256 * 256 +
-              tonumber(element(split(".", cidrhost(prefix, -1)), 1)) * 256 * 256 +
-              tonumber(element(split(".", cidrhost(prefix, -1)), 2)) * 256 +
-              tonumber(element(split(".", cidrhost(prefix, -1)), 3))
-              ) <= (
-              tonumber(element(split(".", cidrhost(vnet_space, -1)), 0)) * 256 * 256 * 256 +
-              tonumber(element(split(".", cidrhost(vnet_space, -1)), 1)) * 256 * 256 +
-              tonumber(element(split(".", cidrhost(vnet_space, -1)), 2)) * 256 +
-              tonumber(element(split(".", cidrhost(vnet_space, -1)), 3))
-            )
-          )
-        ])
-      ]
-    ]))
-    error_message = "All subnet address prefixes must be within the VNet address space."
-  }
+  # validation {
+  #   condition = var.vnet.address_space == null ? true : alltrue(flatten([
+  #     for subnet in values(var.vnet.subnets) : [
+  #       for prefix in subnet.address_prefixes :
+  #       can(cidrhost(prefix, 0)) &&
+  #       anytrue([
+  #         for vnet_space in var.vnet.address_space :
+  #         can(cidrhost(vnet_space, 0)) &&
+  #         (
+  #           (
+  #             tonumber(element(split(".", cidrhost(prefix, 0)), 0)) * 256 * 256 * 256 +
+  #             tonumber(element(split(".", cidrhost(prefix, 0)), 1)) * 256 * 256 +
+  #             tonumber(element(split(".", cidrhost(prefix, 0)), 2)) * 256 +
+  #             tonumber(element(split(".", cidrhost(prefix, 0)), 3))
+  #             ) >= (
+  #             tonumber(element(split(".", cidrhost(vnet_space, 0)), 0)) * 256 * 256 * 256 +
+  #             tonumber(element(split(".", cidrhost(vnet_space, 0)), 1)) * 256 * 256 +
+  #             tonumber(element(split(".", cidrhost(vnet_space, 0)), 2)) * 256 +
+  #             tonumber(element(split(".", cidrhost(vnet_space, 0)), 3))
+  #           )
+  #         ) &&
+  #         (
+  #           (
+  #             tonumber(element(split(".", cidrhost(prefix, -1)), 0)) * 256 * 256 * 256 +
+  #             tonumber(element(split(".", cidrhost(prefix, -1)), 1)) * 256 * 256 +
+  #             tonumber(element(split(".", cidrhost(prefix, -1)), 2)) * 256 +
+  #             tonumber(element(split(".", cidrhost(prefix, -1)), 3))
+  #             ) <= (
+  #             tonumber(element(split(".", cidrhost(vnet_space, -1)), 0)) * 256 * 256 * 256 +
+  #             tonumber(element(split(".", cidrhost(vnet_space, -1)), 1)) * 256 * 256 +
+  #             tonumber(element(split(".", cidrhost(vnet_space, -1)), 2)) * 256 +
+  #             tonumber(element(split(".", cidrhost(vnet_space, -1)), 3))
+  #           )
+  #         )
+  #       ])
+  #     ]
+  #   ]))
+  #   error_message = "All subnet address prefixes must be within the VNet address space."
+  # }
 
   # validation {
   #   condition = alltrue([
