@@ -95,7 +95,10 @@ resource "azurerm_virtual_network_dns_servers" "dns" {
 
 # subnets
 resource "azurerm_subnet" "subnets" {
-  for_each = try(var.vnet.subnets, {})
+  # for_each = try(var.vnet.subnets, {})
+  for_each = lookup(
+    var.vnet, "subnets", {}
+  )
 
   name = coalesce(
     each.value.name, try(
@@ -147,7 +150,8 @@ resource "azurerm_network_security_group" "nsg" {
     ),
     # Handle subnet NSGs
     {
-      for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => lookup(subnet, "network_security_group", null)
+      # for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => lookup(subnet, "network_security_group", null)
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => lookup(subnet, "network_security_group", null)
       if lookup(subnet, "network_security_group", null) != null
     }
   )
@@ -263,7 +267,8 @@ resource "azurerm_route_table" "rt" {
     try(var.vnet.route_tables, {}),
     # subnet level route tables
     {
-      for subnet_key, subnet in try(var.vnet.subnets, {}) :
+      # for subnet_key, subnet in try(var.vnet.subnets, {}) :
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) :
       subnet_key => subnet.route_table
       if lookup(subnet, "route_table", null) != null
     }
