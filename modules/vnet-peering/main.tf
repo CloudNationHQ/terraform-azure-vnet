@@ -1,6 +1,6 @@
 resource "azurerm_virtual_network_peering" "local_to_remote" {
-  name = try(
-    var.vnet_peering.local.peering_name, "peer-to-${substr(var.vnet_peering.remote.name, 0, 72)}"
+  name = coalesce(try(
+    var.vnet_peering.local.peering_name, null), "peer-to-${substr(var.vnet_peering.remote.name, 0, 72)}"
   )
 
   resource_group_name                    = var.vnet_peering.local.resource_group_name
@@ -21,8 +21,8 @@ resource "azurerm_virtual_network_peering" "local_to_remote" {
 }
 
 resource "azurerm_virtual_network_peering" "remote_to_local" {
-  name = try(
-    var.vnet_peering.remote.peering_name, "peer-to-${substr(var.vnet_peering.local.name, 0, 72)}"
+  name = coalesce(try(
+    var.vnet_peering.remote.peering_name, null), "peer-to-${substr(var.vnet_peering.local.name, 0, 72)}"
   )
 
   resource_group_name                    = var.vnet_peering.remote.resource_group_name
