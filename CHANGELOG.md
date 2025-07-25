@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.2.3...v9.3.0) (2025-07-25)
+
+
+### Features
+
+* **deps:** bump github.com/cloudnationhq/az-cn-go-validor in /tests ([#165](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/165)) ([47362bb](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/47362bb21df8ac8e9e84f9173133d254f31f0618))
+
+
+### Bug Fixes
+
+* peering_name fallback ([#166](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/166)) ([458300c](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/458300cac026177ad7a92e8c87feafce20e88d7a))
+
 ## [9.2.3](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.2.2...v9.2.3) (2025-07-09)
 
 
