@@ -154,7 +154,9 @@ resource "azurerm_network_security_group" "nsg" {
 
   name = coalesce(
     lookup(each.value, "name", null),
-    try("${var.naming.network_security_group}-${each.key}", null)
+    try(
+      "${var.naming.network_security_group}-${each.key}", null
+    ), each.key
   )
 
   resource_group_name = coalesce(
@@ -189,7 +191,10 @@ resource "azurerm_network_security_rule" "rules" {
             nsg_name = azurerm_network_security_group.nsg[nsg_key].name
             rule     = rule
             rule_name = coalesce(
-              rule.name, try(join("-", [var.naming.network_security_group_rule, rule_key]), rule_key)
+              rule.name, try(
+                join("-", [var.naming.network_security_group_rule, rule_key]
+                ), rule_key
+              )
             )
           }
         }
@@ -205,7 +210,10 @@ resource "azurerm_network_security_rule" "rules" {
             nsg_name = azurerm_network_security_group.nsg[subnet_key].name
             rule     = rule
             rule_name = coalesce(
-              rule.name, try(join("-", [var.naming.network_security_group_rule, rule_key]), rule_key)
+              rule.name, try(
+                join("-", [var.naming.network_security_group_rule, rule_key]
+                ), rule_key
+              )
             )
           }
         }
@@ -219,13 +227,13 @@ resource "azurerm_network_security_rule" "rules" {
   access                                     = each.value.rule.access
   protocol                                   = each.value.rule.protocol
   source_port_range                          = each.value.rule.source_port_range
-  source_port_ranges                         = each.value.rule.source_port_ranges
+  source_port_ranges                         = length(coalesce(each.value.rule.source_port_ranges, [])) > 0 ? each.value.rule.source_port_ranges : null
   destination_port_range                     = each.value.rule.destination_port_range
-  destination_port_ranges                    = each.value.rule.destination_port_ranges
+  destination_port_ranges                    = length(coalesce(each.value.rule.destination_port_ranges, [])) > 0 ? each.value.rule.destination_port_ranges : null
   source_address_prefix                      = each.value.rule.source_address_prefix
-  source_address_prefixes                    = each.value.rule.source_address_prefixes
+  source_address_prefixes                    = length(coalesce(each.value.rule.source_address_prefixes, [])) > 0 ? each.value.rule.source_address_prefixes : null
   destination_address_prefix                 = each.value.rule.destination_address_prefix
-  destination_address_prefixes               = each.value.rule.destination_address_prefixes
+  destination_address_prefixes               = length(coalesce(each.value.rule.destination_address_prefixes, [])) > 0 ? each.value.rule.destination_address_prefixes : null
   description                                = each.value.rule.description
   network_security_group_name                = each.value.nsg_name
   source_application_security_group_ids      = each.value.rule.source_application_security_group_ids
