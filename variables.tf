@@ -188,14 +188,6 @@ variable "vnet" {
     ])
     error_message = "Each NSG rule must have a unique priority within its NSG."
   }
-
-  validation {
-    condition = alltrue([
-      for subnet in values(var.vnet.subnets) :
-      contains(["Enabled", "Disabled", "NetworkSecurityGroupEnabled"], subnet.private_endpoint_network_policies)
-    ])
-    error_message = "private_endpoint_network_policies must be one of: Enabled, Disabled, NetworkSecurityGroupEnabled"
-  }
 }
 
 variable "use_existing_vnet" {
