@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.3.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.0...v9.3.1) (2025-07-29)
+
+
+### Bug Fixes
+
+* align variable types with provider schema ([#171](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/171)) ([54f5122](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/54f512295f438ce6650dcb61ea16bc575b2159ae))
+* resolve network security group rule field conflicts by prioritizing plural fields over singular ([#168](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/168)) ([1a3bab7](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/1a3bab7c1ccbc8785f3ce288421317a204dc4208))
+
 ## [9.3.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.2.3...v9.3.0) (2025-07-25)
 
 
