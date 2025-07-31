@@ -221,24 +221,31 @@ resource "azurerm_network_security_rule" "rules" {
     ]) : pair.key => pair.value
   })
 
-  name                                       = each.value.rule_name
-  priority                                   = each.value.rule.priority
-  direction                                  = each.value.rule.direction
-  access                                     = each.value.rule.access
-  protocol                                   = each.value.rule.protocol
-  source_port_range                          = each.value.rule.source_port_range
-  source_port_ranges                         = length(coalesce(each.value.rule.source_port_ranges, [])) > 0 ? each.value.rule.source_port_ranges : null
-  destination_port_range                     = each.value.rule.destination_port_range
-  destination_port_ranges                    = length(coalesce(each.value.rule.destination_port_ranges, [])) > 0 ? each.value.rule.destination_port_ranges : null
-  source_address_prefix                      = each.value.rule.source_address_prefix
-  source_address_prefixes                    = length(coalesce(each.value.rule.source_address_prefixes, [])) > 0 ? each.value.rule.source_address_prefixes : null
-  destination_address_prefix                 = each.value.rule.destination_address_prefix
-  destination_address_prefixes               = length(coalesce(each.value.rule.destination_address_prefixes, [])) > 0 ? each.value.rule.destination_address_prefixes : null
-  description                                = each.value.rule.description
-  network_security_group_name                = each.value.nsg_name
-  source_application_security_group_ids      = each.value.rule.source_application_security_group_ids
-  destination_application_security_group_ids = each.value.rule.destination_application_security_group_ids
-
+  name      = each.value.rule_name
+  priority  = each.value.rule.priority
+  direction = each.value.rule.direction
+  access    = each.value.rule.access
+  protocol  = each.value.rule.protocol
+  source_address_prefix = (
+    each.value.rule.source_address_prefix != null ? each.value.rule.source_address_prefix : null
+  )
+  source_address_prefixes = (
+    each.value.rule.source_address_prefix == null && length(coalesce(each.value.rule.source_address_prefixes, [])) > 0 ? each.value.rule.source_address_prefixes : null
+  )
+  source_application_security_group_ids = (
+    each.value.rule.source_address_prefix == null && length(coalesce(each.value.rule.source_address_prefixes, [])) == 0 && length(coalesce(each.value.rule.source_application_security_group_ids, [])) > 0 ? each.value.rule.source_application_security_group_ids : null
+  )
+  destination_address_prefix = (
+    each.value.rule.destination_address_prefix != null ? each.value.rule.destination_address_prefix : null
+  )
+  destination_address_prefixes = (
+    each.value.rule.destination_address_prefix == null && length(coalesce(each.value.rule.destination_address_prefixes, [])) > 0 ? each.value.rule.destination_address_prefixes : null
+  )
+  destination_application_security_group_ids = (
+    each.value.rule.destination_address_prefix == null && length(coalesce(each.value.rule.destination_address_prefixes, [])) == 0 && length(coalesce(each.value.rule.destination_application_security_group_ids, [])) > 0 ? each.value.rule.destination_application_security_group_ids : null
+  )
+  description                 = each.value.rule.description
+  network_security_group_name = each.value.nsg_name
   resource_group_name = coalesce(
     lookup(
       var.vnet, "resource_group_name", null
