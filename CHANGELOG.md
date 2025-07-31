@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.2](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.1...v9.3.2) (2025-07-31)
+
+
+### Bug Fixes
+
+* improve handling of null values in network security rule attributes ([#174](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/174)) ([1e51956](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/1e51956ce5adae9824c0f4edbbc18cbf0739c83b))
+
 ## [9.3.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.0...v9.3.1) (2025-07-29)
 
 
