@@ -221,11 +221,15 @@ resource "azurerm_network_security_rule" "rules" {
     ]) : pair.key => pair.value
   })
 
-  name      = each.value.rule_name
-  priority  = each.value.rule.priority
-  direction = each.value.rule.direction
-  access    = each.value.rule.access
-  protocol  = each.value.rule.protocol
+  name                    = each.value.rule_name
+  priority                = each.value.rule.priority
+  direction               = each.value.rule.direction
+  access                  = each.value.rule.access
+  protocol                = each.value.rule.protocol
+  source_port_range       = each.value.rule.source_port_range
+  source_port_ranges      = length(coalesce(each.value.rule.source_port_ranges, [])) > 0 ? each.value.rule.source_port_ranges : null
+  destination_port_range  = each.value.rule.destination_port_range
+  destination_port_ranges = length(coalesce(each.value.rule.destination_port_ranges, [])) > 0 ? each.value.rule.destination_port_ranges : null
   source_address_prefix = (
     each.value.rule.source_address_prefix != null ? each.value.rule.source_address_prefix : null
   )

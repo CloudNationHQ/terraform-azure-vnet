@@ -58,6 +58,35 @@ module "network" {
             }
           }
         }
+      },
+      sn4 = {
+        address_prefixes = ["10.0.4.0/24"]
+        network_security_group = {
+          rules = {
+            multirule = {
+              priority          = 110
+              direction         = "Inbound"
+              access            = "Allow"
+              protocol          = "Tcp"
+              source_port_range = "*"
+              destination_port_ranges = [
+                "80",
+                "443",
+                "8080"
+              ]
+              source_address_prefixes = [
+                "10.10.1.0/24",
+                "10.20.1.0/24",
+                "10.30.1.0/24"
+              ]
+              destination_address_prefixes = [
+                "10.0.4.10",
+                "10.0.4.11",
+                "10.0.4.12"
+              ]
+            }
+          }
+        }
       }
     }
     network_security_groups = {
