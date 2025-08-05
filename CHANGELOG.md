@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.3](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.2...v9.3.3) (2025-08-05)
+
+
+### Bug Fixes
+
+* add missing port range arguments & add security rule with multiples to example for nsg-rules. Also removed unused rules.tf ([#177](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/177)) ([34803ff](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/34803ff98e9a61789ea7d039411d87259f358b89))
+
 ## [9.3.2](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.1...v9.3.2) (2025-07-31)
 
 
