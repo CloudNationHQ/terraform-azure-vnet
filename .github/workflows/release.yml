@@ -1,0 +1,10 @@
+name: Release
+  on:
+    push:
+      branches: [main]
+  jobs:
+    release:
+      uses: cloudnationhq/terraform-azure-workflows/.github/workflows/release-please.yml@main
+      permissions:
+        contents: write
+        pull-requests: write
