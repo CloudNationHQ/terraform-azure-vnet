@@ -66,7 +66,7 @@ variable "vnet" {
           next_hop_type          = string
           next_hop_in_ip_address = optional(string, null)
         })), {})
-         tags = optional(map(string))
+        tags = optional(map(string))
       }))
       shared = optional(object({
         network_security_group = optional(string)
