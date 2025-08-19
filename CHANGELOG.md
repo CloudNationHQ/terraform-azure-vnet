@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.5](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.4...v9.3.5) (2025-08-19)
+
+
+### Bug Fixes
+
+* update missed var type definitions ([#184](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/184)) ([fa7a979](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/fa7a9796374d689da5eb10c5baa2090abc2ec6d9))
+
 ## [9.3.4](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.3...v9.3.4) (2025-08-19)
 
 
