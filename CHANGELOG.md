@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.4](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.3...v9.3.4) (2025-08-19)
+
+
+### Bug Fixes
+
+* nsg and route table tags ([#181](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/181)) ([4faa91e](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/4faa91e77a740530f5f100eeeba555fd1e383e16))
+
 ## [9.3.3](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.2...v9.3.3) (2025-08-05)
 
 
