@@ -171,7 +171,7 @@ resource "azurerm_network_security_group" "nsg" {
   )
 
   tags = coalesce(
-    var.vnet.tags, var.tags
+    each.value.tags, var.tags
   )
 
   lifecycle {
@@ -306,7 +306,7 @@ resource "azurerm_route_table" "rt" {
   )
 
   tags = coalesce(
-    var.vnet.tags, var.tags
+    each.value.tags, var.tags
   )
 
   bgp_route_propagation_enabled = try(each.value.bgp_route_propagation_enabled, true)
