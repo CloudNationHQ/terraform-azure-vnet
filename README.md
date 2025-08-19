@@ -116,6 +116,7 @@ object({
           source_application_security_group_ids      = optional(set(string), [])
           destination_application_security_group_ids = optional(set(string), [])
         })), {})
+        tags = optional(map(string))
       }))
       route_table = optional(object({
         name                          = optional(string)
@@ -126,6 +127,7 @@ object({
           next_hop_type          = string
           next_hop_in_ip_address = optional(string, null)
         })), {})
+         tags = optional(map(string))
       }))
       shared = optional(object({
         network_security_group = optional(string)
