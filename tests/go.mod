@@ -2,7 +2,7 @@ module github.com/cloudnationhq/terraform-azure-vnet
 
 go 1.24.3
 
-require github.com/cloudnationhq/az-cn-go-validor v1.5.1
+require github.com/cloudnationhq/az-cn-go-validor v1.5.2
 
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
