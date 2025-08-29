@@ -13,3 +13,7 @@ func TestApplyNoError(t *testing.T) {
 func TestApplyAllParallel(t *testing.T) {
 	validor.TestApplyAllParallel(t)
 }
+
+func TestApplyAllLocal(t *testing.T) {
+	validor.TestApplyAllLocal(t)
+}
