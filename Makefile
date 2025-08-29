@@ -1,4 +1,4 @@
-.PHONY: all install-tools validate fmt docs test test-parallel test-sequential
+.PHONY: all install-tools validate fmt docs test test-parallel test-sequential test-local
 
 all: install-tools validate fmt docs
 
@@ -14,6 +14,9 @@ test:
 
 test-parallel:
 	cd tests && go test -v -timeout 60m -run '^TestApplyAllParallel$$' -args $(TEST_ARGS) .
+
+test-local:
+	cd tests && go test -v -timeout 60m -run '^TestApplyAllLocal$$' -args $(TEST_ARGS) .
 
 docs:
 	@echo "Generating documentation for root and modules..."
