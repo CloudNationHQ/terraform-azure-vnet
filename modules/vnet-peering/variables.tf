@@ -48,17 +48,6 @@ variable "vnet_peering" {
   }
 
   validation {
-    condition = (
-      var.vnet_peering.local.allow_gateway_transit == false ||
-      var.vnet_peering.remote.use_remote_gateways == false
-      ) && (
-      var.vnet_peering.remote.allow_gateway_transit == false ||
-      var.vnet_peering.local.use_remote_gateways == false
-    )
-    error_message = "Only one side of the peering can have allow_gateway_transit enabled, and the other side must have use_remote_gateways enabled."
-  }
-
-  validation {
     condition     = var.vnet_peering.local.id != var.vnet_peering.remote.id
     error_message = "Local and remote virtual network IDs must be different."
   }
