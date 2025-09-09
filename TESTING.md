@@ -1,13 +1,73 @@
-## Testing
+  ## Testing
 
-Ensure Go and Terraform are installed.
+  Ensure Go and Terraform are installed.
 
-Run tests for different scenarios by setting the example flag when running the tests.
+  ### Individual Module Testing
 
-To run a test, use make test example=default, replacing default with the example you want to test from the examples directory.
+  Test specific examples from the `examples/` directory:
 
-Add skip-destroy=true to skip the destroy step, like make test example=default skip-destroy=true.
+  Test a single example
 
-For running all tests in parallel or sequentially with make test-parallel or make test-sequential, exclude specific examples by adding exception=example1,example2, where example1 and example2 are examples to skip.
+  `make test example=default`
 
-These tests ensure the module's reliability across configurations.
+  Test multiple examples
+
+  `make test example=default,nsg-rules,peering`
+
+  Test with local source (uses current repo code instead of registry)
+
+  `make test example=default local=true`
+
+  Skip terraform destroy after apply
+
+  `make test example=default skip-destroy=true`
+
+  Combine flags
+
+  `make test example=default local=true skip-destroy=true`
+
+  ### Bulk Testing
+
+  Run tests on all discovered examples:
+
+  All examples in parallel (registry source)
+
+  `make test-parallel`
+
+  All examples sequentially (registry source)
+
+  `make test-sequential`
+
+  All examples in parallel with local source conversion
+
+  `make test-local`
+
+  ### Filtering Examples
+
+  Exclude specific examples from bulk testing
+
+  `make test-parallel exception=routes,service-endpoints`
+
+  `make test-sequential exception=default`
+
+  `make test-local exception=peering,routes`
+
+  ### Available Flags
+
+  Test specific examples (comma-separated)
+
+  `example=name1,name2`
+
+  Convert registry module sources to local paths
+
+  `local=true`
+
+  Skip terraform destroy after apply
+
+  `skip-destroy=true`
+
+  Exclude examples from bulk testing (comma-separated)
+
+  `exception=name1,name2`
+
+  These tests ensure the module's reliability across different configurations and deployment scenarios.
