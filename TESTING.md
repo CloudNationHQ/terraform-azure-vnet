@@ -54,19 +54,19 @@
 
   ### Available Flags
 
-  Test specific examples (comma-separated)
+  `Test specific examples (comma-separated)`
 
   example=name1,name2
 
-  Convert registry module sources to local paths
+  `Convert registry module sources to local paths`
 
   local=true
 
-  Skip terraform destroy after apply
+  `Skip terraform destroy after apply`
 
   skip-destroy=true
 
-  Exclude examples from bulk testing (comma-separated)
+  `Exclude examples from bulk testing (comma-separated)`
 
   exception=name1,name2
 
