@@ -44,9 +44,7 @@
 
   ### Filtering Examples
 
-  Exclude specific examples from bulk testing:
-
-  `Skip certain examples`
+  `Exclude specific examples from bulk testing`
 
   make test-parallel exception=routes,service-endpoints
 
