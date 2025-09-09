@@ -49,7 +49,9 @@
   `Skip certain examples`
 
   make test-parallel exception=routes,service-endpoints
+
   make test-sequential exception=default
+
   make test-local exception=peering,routes
 
   ### Available Flags
