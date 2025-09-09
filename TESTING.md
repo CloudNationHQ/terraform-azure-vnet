@@ -54,9 +54,20 @@
 
   `Available Flags`
 
-  - example=name1,name2 - Test specific examples (comma-separated)
-  - local=true - Convert registry module sources to local paths
-  - skip-destroy=true - Skip terraform destroy after apply
-  - exception=name1,name2 - Exclude examples from bulk testing (comma-separated)
+  Test specific examples (comma-separated)
+
+  example=name1,name2
+
+  Convert registry module sources to local paths
+
+  local=true
+
+  Skip terraform destroy after apply
+
+  skip-destroy=true
+
+  Exclude examples from bulk testing (comma-separated)
+
+  exception=name1,name2
 
   These tests ensure the module's reliability across different configurations and deployment scenarios.
