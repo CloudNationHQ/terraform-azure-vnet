@@ -2,43 +2,52 @@
 
   Ensure Go and Terraform are installed.
 
-  ### Individual Module Testing
+  ## Individual Module Testing
 
   Test specific examples from the `examples/` directory:
 
-  # Test a single example
+  Test a single example
+
   make test example=default
 
-  # Test multiple examples
+  Test multiple examples
+
   make test example=default,nsg-rules,peering
 
-  # Test with local source (uses current repo code instead of registry)
+  Test with local source (uses current repo code instead of registry)
+
   make test example=default local=true
 
-  # Skip terraform destroy after apply
+  Skip terraform destroy after apply
+
   make test example=default skip-destroy=true
 
-  # Combine flags
+  Combine flags
+
   make test example=default local=true skip-destroy=true
 
-  ### Bulk Testing
+  ## Bulk Testing
 
   Run tests on all discovered examples:
 
-  # All examples in parallel (registry source)
+  All examples in parallel (registry source)
+
   make test-parallel
 
-  # All examples sequentially (registry source)
+  All examples sequentially (registry source)
+
   make test-sequential
 
-  # All examples in parallel with local source conversion
+  All examples in parallel with local source conversion
+
   make test-local
 
-  ### Filtering Examples
+  ## Filtering Examples
 
   Exclude specific examples from bulk testing:
 
-  # Skip certain examples
+  Skip certain examples
+
   make test-parallel exception=routes,service-endpoints
   make test-sequential exception=default
   make test-local exception=peering,routes
