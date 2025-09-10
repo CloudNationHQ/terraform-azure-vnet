@@ -115,7 +115,7 @@ resource "azurerm_subnet" "subnets" {
     )
   ) ? data.azurerm_virtual_network.existing["vnet"].name : azurerm_virtual_network.vnet["vnet"].name
 
-  address_prefixes                              = each.value.address_prefixes
+  address_prefixes                              = each.value.ip_address_pool == null ? each.value.address_prefixes : null
   service_endpoints                             = each.value.service_endpoints
   private_link_service_network_policies_enabled = each.value.private_link_service_network_policies_enabled
   private_endpoint_network_policies             = each.value.private_endpoint_network_policies
@@ -134,6 +134,15 @@ resource "azurerm_subnet" "subnets" {
         name    = delegation.value.name
         actions = delegation.value.actions
       }
+    }
+  }
+
+  dynamic "ip_address_pool" {
+    for_each = each.value.ip_address_pool != null ? [each.value.ip_address_pool] : []
+
+    content {
+      id                     = ip_address_pool.value.id
+      number_of_ip_addresses = ip_address_pool.value.number_of_ip_addresses
     }
   }
 }
