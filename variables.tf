@@ -187,10 +187,19 @@ variable "vnet" {
         [for subnet in values(var.vnet.subnets) : lookup(subnet, "network_security_group", null)],
         values(var.vnet.network_security_groups)
         ) : nsg != null ? (
-        length(distinct([for rule in values(nsg.rules) : rule.priority])) == length(nsg.rules)
+        alltrue([
+          for direction in ["Inbound", "Outbound"] :
+          length(distinct([
+            for rule in values(nsg.rules) :
+            rule.priority if rule.direction == direction
+            ])) == length([
+            for rule in values(nsg.rules) :
+            rule if rule.direction == direction
+          ])
+        ])
       ) : true
     ])
-    error_message = "Each NSG rule must have a unique priority within its NSG."
+    error_message = "Each NSG rule must have a unique priority within its NSG per direction (Inbound/Outbound)."
   }
 }
 
