@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.5.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.4.0...v9.5.0) (2025-09-10)
+
+
+### Features
+
+* increment validor package and update documentation ([#191](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/191)) ([b9ef6bb](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/b9ef6bbfe371d8c1e380b788927228b74a68418f))
+
+
+### Bug Fixes
+
+* allow same NSG rule priority across different directions ([#194](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/194)) ([9989cbd](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/9989cbddf11e1ae71d39d573df7d05f99ff44fd0))
+
 ## [9.4.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.3.5...v9.4.0) (2025-09-02)
 
 
