@@ -25,7 +25,7 @@ variable "vnet" {
     }))
     subnets = optional(map(object({
       name                                          = optional(string)
-      address_prefixes                              = list(string)
+      address_prefixes                              = optional(list(string))
       service_endpoints                             = optional(set(string), [])
       private_link_service_network_policies_enabled = optional(bool, false)
       private_endpoint_network_policies             = optional(string, "Disabled")
@@ -67,6 +67,10 @@ variable "vnet" {
           next_hop_in_ip_address = optional(string, null)
         })), {})
         tags = optional(map(string))
+      }))
+      ip_address_pool = optional(object({
+        id                     = string
+        number_of_ip_addresses = string
       }))
       shared = optional(object({
         network_security_group = optional(string)
@@ -200,6 +204,14 @@ variable "vnet" {
       ) : true
     ])
     error_message = "Each NSG rule must have a unique priority within its NSG per direction (Inbound/Outbound)."
+  }
+
+  validation {
+    condition = alltrue([
+      for subnet in values(var.vnet.subnets) :
+      (subnet.address_prefixes != null && subnet.ip_address_pool == null) || (subnet.address_prefixes == null && subnet.ip_address_pool != null)
+    ])
+    error_message = "Each subnet must specify exactly one of address_prefixes or ip_address_pool."
   }
 }
 
