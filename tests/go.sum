@@ -4,8 +4,8 @@ github.com/apparentlymart/go-textseg/v15 v15.0.0 h1:uYvfpb3DyLSCGWnctWKGj857c6ew
 github.com/apparentlymart/go-textseg/v15 v15.0.0/go.mod h1:K8XmNZdhEBkdlyDdvbmmsvpAG721bKi0joRfFdHIWJ4=
 github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d h1:xDfNPAt8lFiC1UJrqV3uuy861HCTo708pDMbjHHdCas=
 github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d/go.mod h1:6QX/PXZ00z/TKoufEY6K/a0k6AhaJrQKdFe6OfVXsa4=
-github.com/cloudnationhq/az-cn-go-validor v1.8.0 h1:40JUVxNGmd+klLZ4eReqmKtW3t739lzzeOD49InuJRA=
-github.com/cloudnationhq/az-cn-go-validor v1.8.0/go.mod h1:lSWXDiX3Zj/DC+OMJTdPFh6ItQA3qYwPxkxfPApsl0I=
+github.com/cloudnationhq/az-cn-go-validor v1.11.0 h1:NbYR03egidH3TEuIlG2VXbmCGweCjtGAasuX41VaEGE=
+github.com/cloudnationhq/az-cn-go-validor v1.11.0/go.mod h1:F4N4jILZY5q5SWGrnAu2GmU0hS/4s1N7+9Br/LXY3Qs=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fatih/color v1.18.0 h1:S8gINlzdQ840/4pfAwic/ZE0djQEH3wM94VfqLTZcOM=
