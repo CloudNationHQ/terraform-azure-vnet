@@ -157,8 +157,8 @@ resource "azurerm_network_security_group" "nsg" {
       ),
       # Handle subnet NSGs
       {
-        for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } : subnet_key => lookup(subnet, "network_security_group", null)
-        if lookup(subnet, "network_security_group", null) != null
+        for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } : subnet_key => subnet.network_security_group
+        if contains(keys(subnet), "network_security_group")
       }
     ) : k => v
   }
@@ -216,7 +216,7 @@ resource "azurerm_network_security_rule" "rules" {
       for pair in flatten([
         for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } :
         try([
-          for rule_key, rule in lookup(lookup(subnet, "network_security_group", {}), "rules", {}) : {
+          for rule_key, rule in try(subnet.network_security_group.rules, {}) : {
             key = "${subnet_key}_${rule_key}"
             value = {
               nsg_name = azurerm_network_security_group.nsg[subnet_key].name
@@ -230,6 +230,7 @@ resource "azurerm_network_security_rule" "rules" {
             }
           }
         ], [])
+        if contains(keys(subnet), "network_security_group")
       ]) : pair.key => pair.value
     }) : k => v
   }
@@ -275,9 +276,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
     for k, v in {
       for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
-      if lookup(
-        lookup(subnet, "shared", {}
-      ), "network_security_group", null) != null || lookup(subnet, "network_security_group", null) != null
+      if try(subnet.shared.network_security_group, null) != null || contains(keys(subnet), "network_security_group")
     } : k => v
   }
 
@@ -300,7 +299,7 @@ resource "azurerm_route_table" "rt" {
       {
         for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } :
         subnet_key => subnet.route_table
-        if lookup(subnet, "route_table", null) != null
+        if contains(keys(subnet), "route_table")
       }
     ) : k => v
   }
@@ -356,7 +355,7 @@ resource "azurerm_route" "routes" {
       {
         for pair in flatten([
           for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } : [
-            for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
+            for route_key, route in try(subnet.route_table.routes, {}) : {
               key = "${subnet_key}_${route_key}"
               value = {
                 route_table_name = azurerm_route_table.rt[subnet_key].name
@@ -367,7 +366,7 @@ resource "azurerm_route" "routes" {
                 )
               }
             }
-          ] if lookup(subnet, "route_table", null) != null
+          ] if contains(keys(subnet), "route_table")
         ]) : pair.key => pair.value
       }
     ) : k => v
@@ -391,7 +390,7 @@ resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for k, v in {
       for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
-      if lookup(subnet, "route_table", null) != null || lookup(lookup(subnet, "shared", {}), "route_table", null) != null
+      if contains(keys(subnet), "route_table") || try(subnet.shared.route_table, null) != null
     } : k => v
   }
 
