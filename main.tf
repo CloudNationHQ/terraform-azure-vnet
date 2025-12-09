@@ -296,10 +296,8 @@ resource "azurerm_route_table" "rt" {
       try(var.vnet.route_tables, {}),
       # subnet level route tables
       {
-        for subnet_key in [
-          for sk, sv in try(var.vnet.subnets, {}) : sk
-          if lookup(sv, "route_table", null) != null
-        ] : subnet_key => var.vnet.subnets[subnet_key].route_table
+        for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => lookup(subnet, "route_table", null)
+        if lookup(subnet, "route_table", null) != null
       }
     ) : k => v
   }
@@ -354,11 +352,8 @@ resource "azurerm_route" "routes" {
       },
       {
         for pair in flatten([
-          for subnet_key in [
-            for sk, sv in try(var.vnet.subnets, {}) : sk
-            if lookup(sv, "route_table", null) != null
-            ] : [
-            for route_key, route in lookup(var.vnet.subnets[subnet_key].route_table, "routes", {}) : {
+          for subnet_key, subnet in try(var.vnet.subnets, {}) : [
+            for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
               key = "${subnet_key}_${route_key}"
               value = {
                 route_table_name = azurerm_route_table.rt[subnet_key].name
@@ -369,7 +364,7 @@ resource "azurerm_route" "routes" {
                 )
               }
             }
-          ]
+          ] if lookup(subnet, "route_table", null) != null
         ]) : pair.key => pair.value
       }
     ) : k => v
@@ -392,10 +387,8 @@ resource "azurerm_route" "routes" {
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for k, v in {
-      for subnet_key in [
-        for sk, sv in try(var.vnet.subnets, {}) : sk
-        if lookup(sv, "route_table", null) != null || lookup(lookup(sv, "shared", {}), "route_table", null) != null
-      ] : subnet_key => var.vnet.subnets[subnet_key]
+      for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
+      if lookup(subnet, "route_table", null) != null || lookup(lookup(subnet, "shared", {}), "route_table", null) != null
     } : k => v
   }
 
