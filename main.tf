@@ -95,7 +95,7 @@ resource "azurerm_virtual_network_dns_servers" "dns" {
 
 # subnets
 resource "azurerm_subnet" "subnets" {
-  for_each = try(var.vnet.subnets, {})
+  for_each = { for k, v in try(var.vnet.subnets, {}) : k => v }
 
   name = coalesce(
     each.value.name, try(
@@ -149,17 +149,19 @@ resource "azurerm_subnet" "subnets" {
 
 # network security groups
 resource "azurerm_network_security_group" "nsg" {
-  for_each = merge(
-    # Handle top-level shared NSGs
-    try(
-      var.vnet.network_security_groups, {}
-    ),
-    # Handle subnet NSGs
-    {
-      for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => lookup(subnet, "network_security_group", null)
-      if lookup(subnet, "network_security_group", null) != null
-    }
-  )
+  for_each = {
+    for k, v in merge(
+      # Handle top-level shared NSGs
+      try(
+        var.vnet.network_security_groups, {}
+      ),
+      # Handle subnet NSGs
+      {
+        for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => lookup(subnet, "network_security_group", null)
+        if lookup(subnet, "network_security_group", null) != null
+      }
+    ) : k => v
+  }
 
   name = coalesce(
     lookup(each.value, "name", null),
@@ -269,10 +271,12 @@ resource "azurerm_network_security_rule" "rules" {
 # nsg associations
 resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
-    for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
-    if lookup(
-      lookup(subnet, "shared", {}
-    ), "network_security_group", null) != null || lookup(subnet, "network_security_group", null) != null
+    for k, v in {
+      for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
+      if lookup(
+        lookup(subnet, "shared", {}
+      ), "network_security_group", null) != null || lookup(subnet, "network_security_group", null) != null
+    } : k => v
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
@@ -287,15 +291,17 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
 
 # route tables
 resource "azurerm_route_table" "rt" {
-  for_each = merge(
-    try(var.vnet.route_tables, {}),
-    # subnet level route tables
-    {
-      for subnet_key, subnet in try(var.vnet.subnets, {}) :
-      subnet_key => subnet.route_table
-      if lookup(subnet, "route_table", null) != null
-    }
-  )
+  for_each = {
+    for k, v in merge(
+      try(var.vnet.route_tables, {}),
+      # subnet level route tables
+      {
+        for subnet_key, subnet in try(var.vnet.subnets, {}) :
+        subnet_key => subnet.route_table
+        if lookup(subnet, "route_table", null) != null
+      }
+    ) : k => v
+  }
 
   name = coalesce(
     each.value.name, try(
@@ -379,8 +385,10 @@ resource "azurerm_route" "routes" {
 # route table associations
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
-    for k, v in try(var.vnet.subnets, {}) : k => v
-    if lookup(v, "route_table", null) != null || lookup(lookup(v, "shared", {}), "route_table", null) != null
+    for k, v in {
+      for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
+      if lookup(subnet, "route_table", null) != null || lookup(lookup(subnet, "shared", {}), "route_table", null) != null
+    } : k => v
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
