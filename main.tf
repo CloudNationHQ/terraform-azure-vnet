@@ -157,7 +157,7 @@ resource "azurerm_network_security_group" "nsg" {
       ),
       # Handle subnet NSGs
       {
-        for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => lookup(subnet, "network_security_group", null)
+        for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } : subnet_key => lookup(subnet, "network_security_group", null)
         if lookup(subnet, "network_security_group", null) != null
       }
     ) : k => v
@@ -192,45 +192,47 @@ resource "azurerm_network_security_group" "nsg" {
 
 # security rules
 resource "azurerm_network_security_rule" "rules" {
-  for_each = merge({
-    for pair in flatten([
-      for nsg_key, nsg in try(var.vnet.network_security_groups, {}) :
-      try([
-        for rule_key, rule in lookup(nsg, "rules", {}) : {
-          key = "${nsg_key}_${rule_key}"
-          value = {
-            nsg_name = azurerm_network_security_group.nsg[nsg_key].name
-            rule     = rule
-            rule_name = coalesce(
-              rule.name, try(
-                join("-", [var.naming.network_security_group_rule, rule_key]
-                ), rule_key
+  for_each = {
+    for k, v in merge({
+      for pair in flatten([
+        for nsg_key, nsg in try(var.vnet.network_security_groups, {}) :
+        try([
+          for rule_key, rule in lookup(nsg, "rules", {}) : {
+            key = "${nsg_key}_${rule_key}"
+            value = {
+              nsg_name = azurerm_network_security_group.nsg[nsg_key].name
+              rule     = rule
+              rule_name = coalesce(
+                rule.name, try(
+                  join("-", [var.naming.network_security_group_rule, rule_key]
+                  ), rule_key
+                )
               )
-            )
+            }
           }
-        }
-      ], [])
-    ]) : pair.key => pair.value
-    }, {
-    for pair in flatten([
-      for subnet_key, subnet in try(var.vnet.subnets, {}) :
-      try([
-        for rule_key, rule in lookup(lookup(subnet, "network_security_group", {}), "rules", {}) : {
-          key = "${subnet_key}_${rule_key}"
-          value = {
-            nsg_name = azurerm_network_security_group.nsg[subnet_key].name
-            rule     = rule
-            rule_name = coalesce(
-              rule.name, try(
-                join("-", [var.naming.network_security_group_rule, rule_key]
-                ), rule_key
+        ], [])
+      ]) : pair.key => pair.value
+      }, {
+      for pair in flatten([
+        for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } :
+        try([
+          for rule_key, rule in lookup(lookup(subnet, "network_security_group", {}), "rules", {}) : {
+            key = "${subnet_key}_${rule_key}"
+            value = {
+              nsg_name = azurerm_network_security_group.nsg[subnet_key].name
+              rule     = rule
+              rule_name = coalesce(
+                rule.name, try(
+                  join("-", [var.naming.network_security_group_rule, rule_key]
+                  ), rule_key
+                )
               )
-            )
+            }
           }
-        }
-      ], [])
-    ]) : pair.key => pair.value
-  })
+        ], [])
+      ]) : pair.key => pair.value
+    }) : k => v
+  }
 
   name                    = each.value.rule_name
   priority                = each.value.rule.priority
@@ -296,7 +298,7 @@ resource "azurerm_route_table" "rt" {
       try(var.vnet.route_tables, {}),
       # subnet level route tables
       {
-        for subnet_key, subnet in try(var.vnet.subnets, {}) :
+        for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } :
         subnet_key => subnet.route_table
         if lookup(subnet, "route_table", null) != null
       }
@@ -333,30 +335,14 @@ resource "azurerm_route_table" "rt" {
 
 # routes
 resource "azurerm_route" "routes" {
-  for_each = merge({
-    for pair in flatten([
-      for rt_key, rt in try(var.vnet.route_tables, {}) : [
-        for route_key, route in lookup(rt, "routes", {}) : {
-          key = "${rt_key}_${route_key}"
-          value = {
-            route_table_name = azurerm_route_table.rt[rt_key].name
-            route            = route
-            route_name = coalesce(
-              route.name, join("-", [try(var.naming.route, "rt"), route_key]
-              )
-            )
-          }
-        }
-      ]
-    ]) : pair.key => pair.value
-    },
-    {
+  for_each = {
+    for k, v in merge({
       for pair in flatten([
-        for subnet_key, subnet in try(var.vnet.subnets, {}) : [
-          for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
-            key = "${subnet_key}_${route_key}"
+        for rt_key, rt in try(var.vnet.route_tables, {}) : [
+          for route_key, route in lookup(rt, "routes", {}) : {
+            key = "${rt_key}_${route_key}"
             value = {
-              route_table_name = azurerm_route_table.rt[subnet_key].name
+              route_table_name = azurerm_route_table.rt[rt_key].name
               route            = route
               route_name = coalesce(
                 route.name, join("-", [try(var.naming.route, "rt"), route_key]
@@ -364,10 +350,28 @@ resource "azurerm_route" "routes" {
               )
             }
           }
-        ] if lookup(subnet, "route_table", null) != null
+        ]
       ]) : pair.key => pair.value
-    }
-  )
+      },
+      {
+        for pair in flatten([
+          for subnet_key, subnet in { for sk, sv in try(var.vnet.subnets, {}) : sk => sv } : [
+            for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
+              key = "${subnet_key}_${route_key}"
+              value = {
+                route_table_name = azurerm_route_table.rt[subnet_key].name
+                route            = route
+                route_name = coalesce(
+                  route.name, join("-", [try(var.naming.route, "rt"), route_key]
+                  )
+                )
+              }
+            }
+          ] if lookup(subnet, "route_table", null) != null
+        ]) : pair.key => pair.value
+      }
+    ) : k => v
+  }
 
   name                   = each.value.route_name
   route_table_name       = each.value.route_table_name
