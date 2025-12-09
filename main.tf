@@ -95,7 +95,9 @@ resource "azurerm_virtual_network_dns_servers" "dns" {
 
 # subnets
 resource "azurerm_subnet" "subnets" {
-  for_each = { for k, v in try(var.vnet.subnets, {}) : k => v }
+  for_each = tomap({
+    for k in keys(try(var.vnet.subnets, {})) : k => var.vnet.subnets[k]
+  })
 
   name = coalesce(
     each.value.name, try(
