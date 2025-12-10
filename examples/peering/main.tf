@@ -35,7 +35,8 @@ module "rg_remote" {
 
 
 module "vnet_local" {
-  source  = "../../"
+  source  = "cloudnationhq/vnet/azure"
+  version = "~> 9.0"
 
   naming = local.naming
 
@@ -48,7 +49,8 @@ module "vnet_local" {
 }
 
 module "vnet_remote" {
-  source  = "../../"
+  source  = "cloudnationhq/vnet/azure"
+  version = "~> 9.0"
 
   naming = local.naming
 
