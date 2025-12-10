@@ -154,7 +154,7 @@ resource "azurerm_network_security_group" "nsg" {
     {
       for subnet_key, subnet in try(var.vnet.subnets, {}) :
       subnet_key => subnet.network_security_group
-      if try(subnet.network_security_group != null, false)
+      if contains(keys(subnet), "network_security_group")
     }
   )
 
@@ -267,8 +267,8 @@ resource "azurerm_network_security_rule" "rules" {
 resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
     for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
-    if try(subnet.network_security_group != null, false) ||
-    try(subnet.shared.network_security_group != null, false)
+    if contains(keys(subnet), "network_security_group") ||
+    contains(keys(lookup(subnet, "shared", {})), "network_security_group")
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
@@ -288,7 +288,7 @@ resource "azurerm_route_table" "rt" {
     {
       for subnet_key, subnet in try(var.vnet.subnets, {}) :
       subnet_key => subnet.route_table
-      if try(subnet.route_table != null, false)
+      if contains(keys(subnet), "route_table")
     }
   )
 
@@ -377,8 +377,8 @@ resource "azurerm_route" "routes" {
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
-    if try(subnet.route_table != null, false) ||
-    try(subnet.shared.route_table != null, false)
+    if contains(keys(subnet), "route_table") ||
+    contains(keys(lookup(subnet, "shared", {})), "route_table")
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
