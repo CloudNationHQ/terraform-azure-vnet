@@ -356,7 +356,7 @@ resource "azurerm_route" "routes" {
                 )
               }
             }
-          ] if can(subnet.route_table)
+          ] if lookup(subnet, "route_table", null) != null
         ]) : pair.key => pair.value
       }
     ) : k => v
@@ -379,8 +379,7 @@ resource "azurerm_route" "routes" {
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
-    if contains(keys(subnet), "route_table") ||
-    contains(keys(lookup(subnet, "shared", {})), "route_table")
+    if lookup(subnet, "route_table", null) != null || lookup(lookup(subnet, "shared", {}), "route_table", null) != null
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
