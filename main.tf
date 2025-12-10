@@ -93,14 +93,9 @@ resource "azurerm_virtual_network_dns_servers" "dns" {
   dns_servers = each.value
 }
 
-locals {
-  subnet_keys = var.subnet_keys != null ? var.subnet_keys : keys(try(var.vnet.subnets, {}))
-  subnets_map = { for k in local.subnet_keys : k => try(var.vnet.subnets[k], {}) }
-}
-
 # subnets
 resource "azurerm_subnet" "subnets" {
-  for_each = local.subnets_map
+  for_each = try(var.vnet.subnets, {})
 
   name = coalesce(
     each.value.name, try(
@@ -155,9 +150,9 @@ resource "azurerm_subnet" "subnets" {
 # network security groups
 resource "azurerm_network_security_group" "nsg" {
   for_each = merge(
-    try(var.vnet.network_security_groups, {}),
+    lookup(var.vnet, "network_security_groups", {}),
     {
-      for subnet_key, subnet in local.subnets_map :
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) :
       subnet_key => subnet.network_security_group
       if contains(keys(subnet), "network_security_group")
     }
@@ -271,9 +266,9 @@ resource "azurerm_network_security_rule" "rules" {
 # nsg associations
 resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
-    for subnet_key, subnet in local.subnets_map : subnet_key => subnet
+    for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
     if contains(keys(subnet), "network_security_group") ||
-       contains(keys(lookup(subnet, "shared", {})), "network_security_group")
+    contains(keys(lookup(subnet, "shared", {})), "network_security_group")
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
@@ -291,7 +286,7 @@ resource "azurerm_route_table" "rt" {
   for_each = merge(
     try(var.vnet.route_tables, {}),
     {
-      for subnet_key, subnet in local.subnets_map :
+      for subnet_key, subnet in try(var.vnet.subnets, {}) :
       subnet_key => subnet.route_table
       if contains(keys(subnet), "route_table")
     }
@@ -381,9 +376,9 @@ resource "azurerm_route" "routes" {
 # route table associations
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
-    for subnet_key, subnet in local.subnets_map : subnet_key => subnet
+    for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
     if contains(keys(subnet), "route_table") ||
-       contains(keys(lookup(subnet, "shared", {})), "route_table")
+    contains(keys(lookup(subnet, "shared", {})), "route_table")
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
