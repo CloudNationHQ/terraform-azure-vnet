@@ -327,7 +327,7 @@ resource "azurerm_route" "routes" {
   for_each = {
     for k, v in merge({
       for pair in flatten([
-        for rt_key, rt in try(var.vnet.route_tables, {}) : [
+        for rt_key, rt in lookup(var.vnet, "route_tables", {}) : [
           for route_key, route in lookup(rt, "routes", {}) : {
             key = "${rt_key}_${route_key}"
             value = {
@@ -344,7 +344,7 @@ resource "azurerm_route" "routes" {
       },
       {
         for pair in flatten([
-          for subnet_key, subnet in try(var.vnet.subnets, {}) : [
+          for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : [
             for route_key, route in lookup(lookup(subnet, "route_table", {}), "routes", {}) : {
               key = "${subnet_key}_${route_key}"
               value = {
@@ -378,7 +378,7 @@ resource "azurerm_route" "routes" {
 # route table associations
 resource "azurerm_subnet_route_table_association" "rt_as" {
   for_each = {
-    for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
+    for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
     if contains(keys(subnet), "route_table") ||
     contains(keys(lookup(subnet, "shared", {})), "route_table")
   }
