@@ -95,7 +95,9 @@ resource "azurerm_virtual_network_dns_servers" "dns" {
 
 # subnets
 resource "azurerm_subnet" "subnets" {
-  for_each = try(var.vnet.subnets, {})
+  for_each = lookup(
+    var.vnet, "subnets", {}
+  )
 
   name = coalesce(
     each.value.name, try(
@@ -189,7 +191,7 @@ resource "azurerm_network_security_group" "nsg" {
 resource "azurerm_network_security_rule" "rules" {
   for_each = merge({
     for pair in flatten([
-      for nsg_key, nsg in try(var.vnet.network_security_groups, {}) :
+      for nsg_key, nsg in lookup(var.vnet, "network_security_groups", {}) :
       try([
         for rule_key, rule in lookup(nsg, "rules", {}) : {
           key = "${nsg_key}_${rule_key}"
@@ -208,7 +210,7 @@ resource "azurerm_network_security_rule" "rules" {
     ]) : pair.key => pair.value
     }, {
     for pair in flatten([
-      for subnet_key, subnet in try(var.vnet.subnets, {}) :
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) :
       try([
         for rule_key, rule in lookup(lookup(subnet, "network_security_group", {}), "rules", {}) : {
           key = "${subnet_key}_${rule_key}"
@@ -284,9 +286,9 @@ resource "azurerm_subnet_network_security_group_association" "nsg_as" {
 # route tables
 resource "azurerm_route_table" "rt" {
   for_each = merge(
-    try(var.vnet.route_tables, {}),
+    lookup(var.vnet, "route_tables", {}),
     {
-      for subnet_key, subnet in try(var.vnet.subnets, {}) :
+      for subnet_key, subnet in lookup(var.vnet, "subnets", {}) :
       subnet_key => subnet.route_table
       if contains(keys(subnet), "route_table")
     }
