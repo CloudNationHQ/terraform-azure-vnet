@@ -215,6 +215,13 @@ variable "vnet" {
   }
 }
 
+# Optional explicit subnet keys to force plan-time stable keys when calling module
+variable "subnet_keys" {
+  description = "Optional list of subnet keys to force static for_each keys when subnets map values are unknown at plan time."
+  type        = list(string)
+  default     = null
+}
+
 variable "use_existing_vnet" {
   description = "Whether to use existing VNet for all vnets"
   type        = bool
@@ -244,4 +251,3 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-
