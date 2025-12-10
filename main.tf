@@ -289,8 +289,8 @@ resource "azurerm_route_table" "rt" {
     lookup(var.vnet, "route_tables", {}),
     {
       for subnet_key, subnet in lookup(var.vnet, "subnets", {}) :
-      subnet_key => subnet.route_table
-      if contains(keys(subnet), "route_table")
+      subnet_key => lookup(subnet, "route_table", null)
+      if lookup(subnet, "route_table", null) != null
     }
   )
 
