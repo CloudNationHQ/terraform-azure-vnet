@@ -268,7 +268,7 @@ resource "azurerm_network_security_rule" "rules" {
 # nsg associations
 resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
-    for subnet_key, subnet in try(var.vnet.subnets, {}) : subnet_key => subnet
+    for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
     if contains(keys(subnet), "network_security_group") ||
     contains(keys(lookup(subnet, "shared", {})), "network_security_group")
   }
