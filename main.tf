@@ -155,8 +155,8 @@ resource "azurerm_network_security_group" "nsg" {
     lookup(var.vnet, "network_security_groups", {}),
     {
       for subnet_key, subnet in lookup(var.vnet, "subnets", {}) :
-      subnet_key => subnet.network_security_group
-      if contains(keys(subnet), "network_security_group")
+      subnet_key => lookup(subnet, "network_security_group", null)
+      if lookup(subnet, "network_security_group", null) != null
     }
   )
 
@@ -269,8 +269,7 @@ resource "azurerm_network_security_rule" "rules" {
 resource "azurerm_subnet_network_security_group_association" "nsg_as" {
   for_each = {
     for subnet_key, subnet in lookup(var.vnet, "subnets", {}) : subnet_key => subnet
-    if contains(keys(subnet), "network_security_group") ||
-    contains(keys(lookup(subnet, "shared", {})), "network_security_group")
+    if lookup(subnet, "network_security_group", null) != null || lookup(lookup(subnet, "shared", {}), "network_security_group", null) != null
   }
 
   subnet_id = azurerm_subnet.subnets[each.key].id
