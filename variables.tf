@@ -31,6 +31,7 @@ variable "vnet" {
       private_endpoint_network_policies             = optional(string, "Disabled")
       service_endpoint_policy_ids                   = optional(set(string), [])
       default_outbound_access_enabled               = optional(bool, null)
+      sharing_scope                                 = optional(string)
       delegations = optional(map(object({
         name    = string
         actions = optional(list(string), [])
@@ -212,6 +213,22 @@ variable "vnet" {
       (subnet.address_prefixes != null && subnet.ip_address_pool == null) || (subnet.address_prefixes == null && subnet.ip_address_pool != null)
     ])
     error_message = "Each subnet must specify exactly one of address_prefixes or ip_address_pool."
+  }
+
+  validation {
+    condition = alltrue([
+      for subnet in values(var.vnet.subnets) :
+      subnet.sharing_scope == null || subnet.default_outbound_access_enabled != true
+    ])
+    error_message = "sharing_scope cannot be set if default_outbound_access_enabled is set to true."
+  }
+
+  validation {
+    condition = alltrue([
+      for subnet in values(var.vnet.subnets) :
+      subnet.sharing_scope == null || subnet.sharing_scope == "Tenant"
+    ])
+    error_message = "sharing_scope must be 'Tenant' when specified."
   }
 }
 
