@@ -1,5 +1,15 @@
 # Changelog
 
+## [9.6.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.5.1...v9.6.0) (2026-01-16)
+
+
+### Features
+
+* add sharing_scope to subnet configuration with validation rules ([#204](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/204)) ([0c2c775](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/0c2c775684b1ee07cde992bd2b0f86c253cc9f61))
+* **deps:** bump github.com/cloudnationhq/az-cn-go-validor in /tests ([#201](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/201)) ([73265cc](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/73265ccd6fe520b7fe8693c7686ecea94627082f))
+* **deps:** bump github.com/ulikunitz/xz from 0.5.10 to 0.5.14 in /tests ([#186](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/186)) ([495fb41](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/495fb41f5e5815c1a6e0eb823e124616c8c1a698))
+* **deps:** bump golang.org/x/crypto from 0.36.0 to 0.45.0 in /tests ([#199](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/199)) ([a4f4629](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/a4f4629f106cad940802d65591c5c20b6bb4952b))
+
 ## [9.5.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.5.0...v9.5.1) (2025-12-10)
 
 
