@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.5.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.5.0...v9.5.1) (2025-12-10)
+
+
+### Bug Fixes
+
+* use lookup instead of try/contains to handle unknown values in for_each expressions ([#202](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/202)) ([e041d72](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/e041d72a86ecfbd9ee8f7a542c31dc396c1632ca))
+
 ## [9.5.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.4.0...v9.5.0) (2025-09-10)
 
 
