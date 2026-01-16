@@ -2,7 +2,7 @@ module github.com/cloudnationhq/terraform-azure-vnet
 
 go 1.24.3
 
-require github.com/cloudnationhq/az-cn-go-validor v1.8.0
+require github.com/cloudnationhq/az-cn-go-validor v1.16.0
 
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
@@ -10,7 +10,8 @@ require (
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
-	github.com/gruntwork-io/terratest v0.50.0 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/gruntwork-io/terratest v0.54.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-getter/v2 v2.2.3 // indirect
