@@ -120,9 +120,11 @@ resource "azurerm_subnet" "subnets" {
   address_prefixes                              = each.value.ip_address_pool == null ? each.value.address_prefixes : null
   service_endpoints                             = each.value.service_endpoints
   private_link_service_network_policies_enabled = each.value.private_link_service_network_policies_enabled
+  sharing_scope                                 = each.value.sharing_scope
   private_endpoint_network_policies             = each.value.private_endpoint_network_policies
   service_endpoint_policy_ids                   = each.value.service_endpoint_policy_ids
   default_outbound_access_enabled               = each.value.default_outbound_access_enabled
+
 
   dynamic "delegation" {
     for_each = lookup(
