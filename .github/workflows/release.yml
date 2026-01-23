@@ -5,6 +5,8 @@ on:
 jobs:
   release:
     uses: cloudnationhq/terraform-azure-workflows/.github/workflows/release-please.yml@main
+    secrets: inherit
     permissions:
       contents: write
       pull-requests: write
+
