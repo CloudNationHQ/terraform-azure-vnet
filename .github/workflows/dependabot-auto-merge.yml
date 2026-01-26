@@ -1,7 +1,7 @@
 name: "dependabot auto merge"
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - reopened
@@ -11,4 +11,3 @@ jobs:
   dependabot-auto-merge:
     uses: cloudnationhq/terraform-azure-workflows/.github/workflows/dependabot-auto-merge.yml@main
     secrets: inherit
-
