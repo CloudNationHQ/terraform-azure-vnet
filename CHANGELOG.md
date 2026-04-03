@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.7.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.6.0...v9.7.0) (2026-04-03)
+
+
+### Features
+
+* add missing outputs ([#209](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/209)) ([caa9e18](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/caa9e188d7afa7c5e27bc658f4fe77aac473caf0))
+
 ## [9.6.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.5.1...v9.6.0) (2026-01-16)
 
 
