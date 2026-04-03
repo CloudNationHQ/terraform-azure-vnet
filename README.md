@@ -92,6 +92,7 @@ object({
       private_endpoint_network_policies             = optional(string, "Disabled")
       service_endpoint_policy_ids                   = optional(set(string), [])
       default_outbound_access_enabled               = optional(bool, null)
+      sharing_scope                                 = optional(string)
       delegations = optional(map(object({
         name    = string
         actions = optional(list(string), [])
@@ -226,9 +227,33 @@ The following outputs are exported:
 
 Description: contains network security group configuration
 
+### <a name="output_network_security_rules"></a> [network\_security\_rules](#output\_network\_security\_rules)
+
+Description: contains network security rule configuration
+
+### <a name="output_route_table"></a> [route\_table](#output\_route\_table)
+
+Description: contains route table configuration
+
+### <a name="output_routes"></a> [routes](#output\_routes)
+
+Description: contains route configuration
+
+### <a name="output_subnet_network_security_group_associations"></a> [subnet\_network\_security\_group\_associations](#output\_subnet\_network\_security\_group\_associations)
+
+Description: contains subnet network security group association configuration
+
+### <a name="output_subnet_route_table_associations"></a> [subnet\_route\_table\_associations](#output\_subnet\_route\_table\_associations)
+
+Description: contains subnet route table association configuration
+
 ### <a name="output_subnets"></a> [subnets](#output\_subnets)
 
 Description: contains subnet configuration
+
+### <a name="output_virtual_network_dns_servers"></a> [virtual\_network\_dns\_servers](#output\_virtual\_network\_dns\_servers)
+
+Description: contains virtual network dns servers configuration
 
 ### <a name="output_vnet"></a> [vnet](#output\_vnet)
 
