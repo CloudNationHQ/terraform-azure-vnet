@@ -72,21 +72,21 @@ module "peering" {
 
   vnet_peering = {
     local = {
-      peering_name        = "local-to-remote"
-      name                = module.vnet_local.vnet.name
-      id                  = module.vnet_local.vnet.id
-      resource_group_name = module.vnet_local.vnet.resource_group_name
-      address_space       = module.vnet_local.vnet.address_space
-      use_remote_gateways = false
+      peering_name          = "local-to-remote"
+      name                  = module.vnet_local.vnet.name
+      id                    = module.vnet_local.vnet.id
+      resource_group_name   = module.vnet_local.vnet.resource_group_name
+      address_space         = module.vnet_local.vnet.address_space
+      use_remote_gateways   = false
       allow_gateway_transit = false
     }
     remote = {
-      peering_name        = "remote-to-local"
-      name                = module.vnet_remote.vnet.name
-      id                  = module.vnet_remote.vnet.id
-      resource_group_name = module.vnet_remote.vnet.resource_group_name
-      address_space       = module.vnet_remote.vnet.address_space
-      use_remote_gateways = false
+      peering_name          = "remote-to-local"
+      name                  = module.vnet_remote.vnet.name
+      id                    = module.vnet_remote.vnet.id
+      resource_group_name   = module.vnet_remote.vnet.resource_group_name
+      address_space         = module.vnet_remote.vnet.address_space
+      use_remote_gateways   = false
       allow_gateway_transit = false
     }
   }

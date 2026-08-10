@@ -42,29 +42,29 @@ object({
       name                                   = string
       id                                     = string
       resource_group_name                    = string
-      address_space                          = optional(list(string), [])
-      peering_name                           = optional(string, null)
+      address_space                          = optional(list(string))
+      peering_name                           = optional(string)
       allow_virtual_network_access           = optional(bool)
-      allow_forwarded_traffic                = optional(bool, false)
-      allow_gateway_transit                  = optional(bool, false)
-      only_ipv6_peering_enabled              = optional(bool, false)
+      allow_forwarded_traffic                = optional(bool)
+      allow_gateway_transit                  = optional(bool)
+      only_ipv6_peering_enabled              = optional(bool)
       peer_complete_virtual_networks_enabled = optional(bool)
-      subnet_names                           = optional(list(string), [])
-      use_remote_gateways                    = optional(bool, false)
+      subnet_names                           = optional(list(string))
+      use_remote_gateways                    = optional(bool)
     })
     remote = object({
       name                                   = string
       id                                     = string
       resource_group_name                    = string
-      address_space                          = optional(list(string), [])
-      peering_name                           = optional(string, null)
+      address_space                          = optional(list(string))
+      peering_name                           = optional(string)
       allow_virtual_network_access           = optional(bool)
-      allow_forwarded_traffic                = optional(bool, false)
-      allow_gateway_transit                  = optional(bool, false)
-      only_ipv6_peering_enabled              = optional(bool, false)
+      allow_forwarded_traffic                = optional(bool)
+      allow_gateway_transit                  = optional(bool)
+      only_ipv6_peering_enabled              = optional(bool)
       peer_complete_virtual_networks_enabled = optional(bool)
-      subnet_names                           = optional(list(string), [])
-      use_remote_gateways                    = optional(bool, false)
+      subnet_names                           = optional(list(string))
+      use_remote_gateways                    = optional(bool)
     })
   })
 ```
