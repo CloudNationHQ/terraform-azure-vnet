@@ -27,28 +27,28 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 5.0)
 
 ## Providers
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 4.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 5.0)
 
 ## Resources
 
 The following resources are used by this module:
 
-- [azurerm_network_security_group.nsg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group) (resource)
-- [azurerm_network_security_rule.rules](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule) (resource)
-- [azurerm_route.routes](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route) (resource)
-- [azurerm_route_table.rt](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route_table) (resource)
-- [azurerm_subnet.subnets](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) (resource)
-- [azurerm_subnet_network_security_group_association.nsg_as](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_network_security_group_association) (resource)
-- [azurerm_subnet_route_table_association.rt_as](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_route_table_association) (resource)
-- [azurerm_virtual_network.vnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
-- [azurerm_virtual_network_dns_servers.dns](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_dns_servers) (resource)
-- [azurerm_virtual_network.existing](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/virtual_network) (data source)
+- [azurerm_network_security_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group) (resource)
+- [azurerm_network_security_rule.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule) (resource)
+- [azurerm_route.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route) (resource)
+- [azurerm_route_table.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route_table) (resource)
+- [azurerm_subnet.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) (resource)
+- [azurerm_subnet_network_security_group_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_network_security_group_association) (resource)
+- [azurerm_subnet_route_table_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_route_table_association) (resource)
+- [azurerm_virtual_network.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
+- [azurerm_virtual_network_dns_servers.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_dns_servers) (resource)
+- [azurerm_virtual_network.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/virtual_network) (data source)
 
 ## Required Inputs
 
@@ -70,16 +70,16 @@ object({
     }))
     resource_group_name            = optional(string)
     location                       = optional(string)
-    use_existing_vnet              = optional(bool, false)
+    use_existing_vnet              = optional(bool)
     edge_zone                      = optional(string)
     bgp_community                  = optional(string)
     flow_timeout_in_minutes        = optional(number)
     private_endpoint_vnet_policies = optional(string)
-    dns_servers                    = optional(list(string), [])
+    dns_servers                    = optional(list(string))
     tags                           = optional(map(string))
     ddos_protection_plan = optional(object({
       id     = string
-      enable = optional(bool, true)
+      enable = optional(bool)
     }))
     encryption = optional(object({
       enforcement = string
@@ -87,16 +87,16 @@ object({
     subnets = optional(map(object({
       name                                          = optional(string)
       address_prefixes                              = optional(list(string))
-      service_endpoints                             = optional(set(string), [])
-      private_link_service_network_policies_enabled = optional(bool, false)
-      private_endpoint_network_policies             = optional(string, "Disabled")
-      service_endpoint_policy_ids                   = optional(set(string), [])
-      default_outbound_access_enabled               = optional(bool, null)
+      service_endpoints                             = optional(set(string))
+      private_link_service_network_policies_enabled = optional(bool)
+      private_endpoint_network_policies             = optional(string)
+      service_endpoint_policy_ids                   = optional(set(string))
+      default_outbound_access_enabled               = optional(bool)
       sharing_scope                                 = optional(string)
       delegations = optional(map(object({
         name    = string
-        actions = optional(list(string), [])
-      })), {})
+        actions = optional(list(string))
+      })))
       network_security_group = optional(object({
         name = optional(string)
         rules = optional(map(object({
@@ -114,20 +114,20 @@ object({
           destination_address_prefix                 = optional(string)
           destination_address_prefixes               = optional(set(string))
           description                                = optional(string)
-          source_application_security_group_ids      = optional(set(string), [])
-          destination_application_security_group_ids = optional(set(string), [])
-        })), {})
+          source_application_security_group_ids      = optional(set(string))
+          destination_application_security_group_ids = optional(set(string))
+        })))
         tags = optional(map(string))
       }))
       route_table = optional(object({
         name                          = optional(string)
-        bgp_route_propagation_enabled = optional(bool, true)
+        bgp_route_propagation_enabled = optional(bool)
         routes = optional(map(object({
           name                   = optional(string)
           address_prefix         = string
           next_hop_type          = string
-          next_hop_in_ip_address = optional(string, null)
-        })), {})
+          next_hop_in_ip_address = optional(string)
+        })))
         tags = optional(map(string))
       }))
       ip_address_pool = optional(object({
@@ -137,8 +137,8 @@ object({
       shared = optional(object({
         network_security_group = optional(string)
         route_table            = optional(string)
-      }), {})
-    })), {})
+      }))
+    })))
     network_security_groups = optional(map(object({
       name = optional(string)
       rules = optional(map(object({
@@ -156,22 +156,22 @@ object({
         destination_address_prefix                 = optional(string)
         destination_address_prefixes               = optional(set(string))
         description                                = optional(string)
-        source_application_security_group_ids      = optional(set(string), [])
-        destination_application_security_group_ids = optional(set(string), [])
-      })), {})
+        source_application_security_group_ids      = optional(set(string))
+        destination_application_security_group_ids = optional(set(string))
+      })))
       tags = optional(map(string))
-    })), {})
+    })))
     route_tables = optional(map(object({
       name                          = optional(string)
-      bgp_route_propagation_enabled = optional(bool, true)
+      bgp_route_propagation_enabled = optional(bool)
       routes = optional(map(object({
         name                   = optional(string)
         address_prefix         = string
         next_hop_type          = string
-        next_hop_in_ip_address = optional(string, null)
-      })), {})
+        next_hop_in_ip_address = optional(string)
+      })))
       tags = optional(map(string))
-    })), {})
+    })))
   })
 ```
 
@@ -184,14 +184,6 @@ The following input variables are optional (have default values):
 Description: default azure region to be used.
 
 Type: `string`
-
-Default: `null`
-
-### <a name="input_naming"></a> [naming](#input\_naming)
-
-Description: Used for naming purposes
-
-Type: `map(string)`
 
 Default: `null`
 
