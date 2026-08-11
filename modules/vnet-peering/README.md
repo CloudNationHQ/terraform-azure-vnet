@@ -9,15 +9,15 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 5.0)
 
 ## Providers
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 4.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 5.0)
 
-- <a name="provider_azurerm.remote"></a> [azurerm.remote](#provider\_azurerm.remote) (~> 4.0)
+- <a name="provider_azurerm.remote"></a> [azurerm.remote](#provider\_azurerm.remote) (~> 5.0)
 
 ## Resources
 
@@ -42,29 +42,29 @@ object({
       name                                   = string
       id                                     = string
       resource_group_name                    = string
-      address_space                          = optional(list(string), [])
-      peering_name                           = optional(string, null)
-      allow_virtual_network_access           = optional(bool, true)
-      allow_forwarded_traffic                = optional(bool, false)
-      allow_gateway_transit                  = optional(bool, false)
-      only_ipv6_peering_enabled              = optional(bool, false)
-      peer_complete_virtual_networks_enabled = optional(bool, true)
-      subnet_names                           = optional(list(string), [])
-      use_remote_gateways                    = optional(bool, false)
+      address_space                          = optional(list(string))
+      peering_name                           = optional(string)
+      allow_virtual_network_access           = optional(bool)
+      allow_forwarded_traffic                = optional(bool)
+      allow_gateway_transit                  = optional(bool)
+      only_ipv6_peering_enabled              = optional(bool)
+      peer_complete_virtual_networks_enabled = optional(bool)
+      subnet_names                           = optional(list(string))
+      use_remote_gateways                    = optional(bool)
     })
     remote = object({
       name                                   = string
       id                                     = string
       resource_group_name                    = string
-      address_space                          = optional(list(string), [])
-      peering_name                           = optional(string, null)
-      allow_virtual_network_access           = optional(bool, true)
-      allow_forwarded_traffic                = optional(bool, false)
-      allow_gateway_transit                  = optional(bool, false)
-      only_ipv6_peering_enabled              = optional(bool, false)
-      peer_complete_virtual_networks_enabled = optional(bool, true)
-      subnet_names                           = optional(list(string), [])
-      use_remote_gateways                    = optional(bool, false)
+      address_space                          = optional(list(string))
+      peering_name                           = optional(string)
+      allow_virtual_network_access           = optional(bool)
+      allow_forwarded_traffic                = optional(bool)
+      allow_gateway_transit                  = optional(bool)
+      only_ipv6_peering_enabled              = optional(bool)
+      peer_complete_virtual_networks_enabled = optional(bool)
+      subnet_names                           = optional(list(string))
+      use_remote_gateways                    = optional(bool)
     })
   })
 ```

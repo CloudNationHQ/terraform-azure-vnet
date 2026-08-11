@@ -1,5 +1,16 @@
 # Changelog
 
+## [10.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.7.0...v10.0.0) (2026-08-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update azurerm to v5 ([#215](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/215))
+
+### Features
+
+* Update azurerm to v5 ([#215](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/215)) ([9cc0846](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/9cc0846727f98d4e98dfb42d85f57c3b25b75d3b))
+
 ## [9.7.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.6.0...v9.7.0) (2026-04-03)
 
 
