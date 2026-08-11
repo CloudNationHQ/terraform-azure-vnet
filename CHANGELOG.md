@@ -1,5 +1,13 @@
 # Changelog
 
+## [10.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v10.0.0...v10.1.0) (2026-08-11)
+
+
+### Features
+
+* add unit tests ([#217](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/217)) ([518589a](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/518589adcf4c0d8d5b363956d86d0a8991fc33ec))
+* **deps:** bump github.com/cloudnationhq/az-cn-go-validor in /tests ([#212](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/212)) ([389e5b9](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/389e5b9b3020c7f61a1b99a4d280ad56e3feca9b))
+
 ## [10.0.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v9.7.0...v10.0.0) (2026-08-11)
 
 
