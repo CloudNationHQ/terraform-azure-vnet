@@ -272,11 +272,7 @@ To update the module's documentation run `make doc`
 
 We welcome contributions from the community! Whether it's reporting a bug, suggesting a new feature, or submitting a pull request, your input is highly valued.
 
-For more information, please see our contribution [guidelines](./CONTRIBUTING.md). <br><br>
-
-<a href="https://github.com/cloudnationhq/terraform-azure-vnet/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=cloudnationhq/terraform-azure-vnet" />
-</a>
+For more information, please see our contribution [guidelines](./CONTRIBUTING.md).
 
 ## License
 
@@ -286,4 +282,3 @@ MIT Licensed. See [LICENSE](https://github.com/cloudnationhq/terraform-azure-vne
 
 - [Documentation](https://learn.microsoft.com/en-us/azure/virtual-network/)
 - [Rest Api](https://learn.microsoft.com/en-us/rest/api/virtual-network/)
-- [Rest Api Specs](https://github.com/Azure/azure-rest-api-specs/blob/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/virtualNetwork.json)
