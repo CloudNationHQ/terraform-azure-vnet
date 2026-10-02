@@ -318,7 +318,7 @@ resource "azurerm_route" "this" {
           for route_key, route in coalesce(rt.routes, {}) : {
             key = "${rt_key}_${route_key}"
             value = {
-              route_table_name = azurerm_route_table.this[rt_key].name
+              route_table_name = "${azurerm_route_table.this[rt_key].name}-x"
               route            = route
               route_name       = coalesce(route.name, route_key)
             }
