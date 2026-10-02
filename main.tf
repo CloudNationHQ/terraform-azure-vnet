@@ -208,7 +208,7 @@ resource "azurerm_network_security_rule" "this" {
       for subnet_key, subnet in coalesce(var.vnet.subnets, {}) :
       try([
         for rule_key, rule in lookup(lookup(subnet, "network_security_group", {}), "rules", {}) : {
-          key = "${subnet_key}-${rule_key}"
+          key = "${subnet_key}_${rule_key}"
           value = {
             nsg_name  = azurerm_network_security_group.this[subnet_key].name
             rule      = rule
