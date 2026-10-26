@@ -27,6 +27,7 @@ variable "vnet" {
       name                                          = optional(string)
       address_prefixes                              = optional(list(string))
       service_endpoints                             = optional(set(string))
+      service_endpoint_network_identifiers          = optional(map(string))
       private_link_service_network_policies_enabled = optional(bool)
       private_endpoint_network_policies             = optional(string)
       service_endpoint_policy_ids                   = optional(set(string))
