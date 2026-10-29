@@ -27,6 +27,7 @@ variable "vnet" {
       name                                          = optional(string)
       address_prefixes                              = optional(list(string))
       service_endpoints                             = optional(set(string))
+      service_endpoint_network_identifiers          = optional(map(string))
       private_link_service_network_policies_enabled = optional(bool)
       private_endpoint_network_policies             = optional(string)
       service_endpoint_policy_ids                   = optional(set(string))
@@ -121,6 +122,16 @@ variable "vnet" {
   validation {
     condition     = var.vnet.resource_group_name != null || var.resource_group_name != null
     error_message = "resource group name must be provided either in the vnet object or as a separate variable."
+  }
+
+  validation {
+    condition = alltrue(flatten([
+      for subnet in values(coalesce(var.vnet.subnets, {})) : [
+        for service in keys(subnet.service_endpoint_network_identifiers != null ? subnet.service_endpoint_network_identifiers : {}) :
+        contains(subnet.service_endpoints != null ? tolist(subnet.service_endpoints) : [], service)
+      ]
+    ]))
+    error_message = "every key in service_endpoint_network_identifiers must also be listed in the subnet's service_endpoints."
   }
 }
 
