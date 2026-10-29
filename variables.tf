@@ -123,6 +123,16 @@ variable "vnet" {
     condition     = var.vnet.resource_group_name != null || var.resource_group_name != null
     error_message = "resource group name must be provided either in the vnet object or as a separate variable."
   }
+
+  validation {
+    condition = alltrue(flatten([
+      for subnet in values(coalesce(var.vnet.subnets, {})) : [
+        for service in keys(subnet.service_endpoint_network_identifiers != null ? subnet.service_endpoint_network_identifiers : {}) :
+        contains(subnet.service_endpoints != null ? tolist(subnet.service_endpoints) : [], service)
+      ]
+    ]))
+    error_message = "every key in service_endpoint_network_identifiers must also be listed in the subnet's service_endpoints."
+  }
 }
 
 variable "use_existing_vnet" {
