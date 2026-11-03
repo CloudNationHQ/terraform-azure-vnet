@@ -125,7 +125,8 @@ resource "azurerm_subnet" "this" {
     for_each = coalesce(each.value.service_endpoints, [])
 
     content {
-      service = service_endpoint.value
+      service            = service_endpoint.value
+      network_identifier = try(each.value.service_endpoint_network_identifiers[service_endpoint.value], null)
     }
   }
 
