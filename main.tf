@@ -206,8 +206,8 @@ resource "azurerm_network_security_rule" "this" {
     }, {
     for pair in flatten([
       for subnet_key, subnet in coalesce(var.vnet.subnets, {}) :
-      try([
-        for rule_key, rule in lookup(lookup(subnet, "network_security_group", {}), "rules", {}) : {
+      [
+        for rule_key, rule in coalesce(subnet.network_security_group.rules, {}) : {
           key = "${subnet_key}_${rule_key}"
           value = {
             nsg_name  = azurerm_network_security_group.this[subnet_key].name
@@ -215,7 +215,7 @@ resource "azurerm_network_security_rule" "this" {
             rule_name = coalesce(rule.name, rule_key)
           }
         }
-      ], [])
+      ] if subnet.network_security_group != null
     ]) : pair.key => pair.value
   })
 
