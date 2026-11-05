@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.1.1](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v10.1.0...v10.1.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* keep nsg rule for_each keys known when rule values are unknown at plan time ([#220](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/220)) ([2f45147](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/2f45147e3b51c20973aeaa5f5082610225f09637)), closes [#219](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/219)
+
 ## [10.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v10.0.0...v10.1.0) (2026-08-11)
 
 
