@@ -267,7 +267,7 @@ Using a dedicated module, we've developed a naming convention for resources that
 
 Full examples detailing all usages, along with integrations with dependency modules, are located in the examples directory.
 
-To update the module's documentation run `make doc`
+To update the module's documentation run `make docs`
 
 ## Contributors
 
