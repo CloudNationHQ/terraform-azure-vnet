@@ -127,8 +127,8 @@ variable "vnet" {
   validation {
     condition = alltrue(flatten([
       for subnet in values(coalesce(var.vnet.subnets, {})) : [
-        for service in keys(subnet.service_endpoint_network_identifiers != null ? subnet.service_endpoint_network_identifiers : {}) :
-        contains(subnet.service_endpoints != null ? tolist(subnet.service_endpoints) : [], service)
+        for service in keys(coalesce(subnet.service_endpoint_network_identifiers, {})) :
+        contains(coalesce(subnet.service_endpoints, []), service)
       ]
     ]))
     error_message = "every key in service_endpoint_network_identifiers must also be listed in the subnet's service_endpoints."

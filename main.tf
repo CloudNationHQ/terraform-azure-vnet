@@ -126,7 +126,7 @@ resource "azurerm_subnet" "this" {
 
     content {
       service            = service_endpoint.value
-      network_identifier = try(each.value.service_endpoint_network_identifiers[service_endpoint.value], null)
+      network_identifier = lookup(coalesce(each.value.service_endpoint_network_identifiers, {}), service_endpoint.value, null)
     }
   }
 
