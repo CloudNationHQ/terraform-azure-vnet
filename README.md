@@ -91,6 +91,7 @@ object({
       private_link_service_network_policies_enabled = optional(bool)
       private_endpoint_network_policies             = optional(string)
       service_endpoint_policy_ids                   = optional(set(string))
+      service_endpoint_network_identifiers          = optional(map(string))
       default_outbound_access_enabled               = optional(bool)
       sharing_scope                                 = optional(string)
       delegations = optional(map(object({
