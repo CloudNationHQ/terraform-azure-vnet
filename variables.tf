@@ -32,6 +32,7 @@ variable "vnet" {
       service_endpoint_policy_ids                   = optional(set(string))
       default_outbound_access_enabled               = optional(bool)
       sharing_scope                                 = optional(string)
+      network_security_group_id_wo_version          = optional(number, 1)
       delegations = optional(map(object({
         name    = string
         actions = optional(list(string))

@@ -108,6 +108,16 @@ resource "azurerm_subnet" "this" {
     ), var.resource_group_name
   )
 
+  network_security_group_id_wo = (
+    each.value.network_security_group != null || try(each.value.shared.network_security_group, null) != null
+    ) ? azurerm_network_security_group.this[
+    try(each.value.shared.network_security_group, null) != null ? each.value.shared.network_security_group : each.key
+  ].id : null
+
+  network_security_group_id_wo_version = (
+    each.value.network_security_group != null || try(each.value.shared.network_security_group, null) != null
+  ) ? each.value.network_security_group_id_wo_version : null
+
   virtual_network_name = (var.use_existing_vnet
     || coalesce(
       var.vnet.use_existing_vnet, false

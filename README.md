@@ -25,7 +25,7 @@ Offers three-tier naming hierarchy (explicit, convention-based, or key-based) fo
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.0)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.11)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 5.0)
 
@@ -33,7 +33,7 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 5.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (5.14.0)
 
 ## Resources
 
@@ -93,6 +93,7 @@ object({
       service_endpoint_policy_ids                   = optional(set(string))
       default_outbound_access_enabled               = optional(bool)
       sharing_scope                                 = optional(string)
+      network_security_group_id_wo_version          = optional(number, 1)
       delegations = optional(map(object({
         name    = string
         actions = optional(list(string))
