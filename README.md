@@ -72,6 +72,7 @@ object({
     location                       = optional(string)
     use_existing_vnet              = optional(bool)
     edge_zone                      = optional(string)
+    advertised_gateway_prefixes    = optional(set(string))
     bgp_community                  = optional(string)
     flow_timeout_in_minutes        = optional(number)
     private_endpoint_vnet_policies = optional(string)
