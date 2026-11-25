@@ -1,0 +1,1 @@
+This deploys subnets with their network security group attached at creation, so Azure Policy that denies subnets without an NSG is satisfied. The NSG can be individual or shared, and the version can be bumped per subnet to resend the NSG id when it changes.
