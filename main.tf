@@ -43,6 +43,7 @@ resource "azurerm_virtual_network" "this" {
   }
 
   edge_zone                      = var.vnet.edge_zone
+  advertised_gateway_prefixes    = var.vnet.advertised_gateway_prefixes
   bgp_community                  = var.vnet.bgp_community
   flow_timeout_in_minutes        = var.vnet.flow_timeout_in_minutes
   private_endpoint_vnet_policies = var.vnet.private_endpoint_vnet_policies
@@ -125,7 +126,8 @@ resource "azurerm_subnet" "this" {
     for_each = coalesce(each.value.service_endpoints, [])
 
     content {
-      service = service_endpoint.value
+      service            = service_endpoint.value
+      network_identifier = lookup(coalesce(each.value.service_endpoint_network_identifiers, {}), service_endpoint.value, null)
     }
   }
 

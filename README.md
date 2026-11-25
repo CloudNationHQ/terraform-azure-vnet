@@ -72,6 +72,7 @@ object({
     location                       = optional(string)
     use_existing_vnet              = optional(bool)
     edge_zone                      = optional(string)
+    advertised_gateway_prefixes    = optional(set(string))
     bgp_community                  = optional(string)
     flow_timeout_in_minutes        = optional(number)
     private_endpoint_vnet_policies = optional(string)
@@ -91,6 +92,7 @@ object({
       private_link_service_network_policies_enabled = optional(bool)
       private_endpoint_network_policies             = optional(string)
       service_endpoint_policy_ids                   = optional(set(string))
+      service_endpoint_network_identifiers          = optional(map(string))
       default_outbound_access_enabled               = optional(bool)
       sharing_scope                                 = optional(string)
       delegations = optional(map(object({
