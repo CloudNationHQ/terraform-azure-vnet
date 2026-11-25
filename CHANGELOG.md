@@ -1,5 +1,17 @@
 # Changelog
 
+## [10.2.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v10.1.0...v10.2.0) (2026-11-25)
+
+
+### Features
+
+* add network_identifier to subnet service endpoints and advertised_gateway_prefixes to virtual network ([#230](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/230)) ([13f072b](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/13f072b3c02e530c9e828295422c223be3d7946e))
+
+
+### Bug Fixes
+
+* keep nsg rule for_each keys known when rule values are unknown at plan time ([#220](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/220)) ([2f45147](https://github.com/CloudNationHQ/terraform-azure-vnet/commit/2f45147e3b51c20973aeaa5f5082610225f09637)), closes [#219](https://github.com/CloudNationHQ/terraform-azure-vnet/issues/219)
+
 ## [10.1.0](https://github.com/CloudNationHQ/terraform-azure-vnet/compare/v10.0.0...v10.1.0) (2026-08-11)
 
 
